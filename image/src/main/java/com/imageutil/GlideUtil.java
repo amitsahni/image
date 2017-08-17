@@ -49,8 +49,8 @@ public class GlideUtil {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
-                if (imageParam.header != null && !imageParam.header.isEmpty()) {
-                    for (Map.Entry<String, String> entry : imageParam.header.entrySet()) {
+                if (imageParam.getHeader() != null && !imageParam.getHeader().isEmpty()) {
+                    for (Map.Entry<String, String> entry : imageParam.getHeader().entrySet()) {
                         request = request.newBuilder().addHeader(entry.getKey(), entry.getValue()).build();
                     }
                 }
@@ -59,39 +59,40 @@ public class GlideUtil {
         });
         mOkHttpClientBuilder.addInterceptor(mInterceptor);
         OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(mOkHttpClientBuilder.build());
-        Glide.get(imageParam.context).register(GlideUrl.class, InputStream.class, factory);
-        if (imageParam.clearCache) {
-            Glide.get(imageParam.context).clearDiskCache();
-            Glide.get(imageParam.context).clearMemory();
+        Glide.get(imageParam.getContext()).register(GlideUrl.class, InputStream.class, factory);
+        if (imageParam.isClearCache()) {
+            Glide.get(imageParam.getContext()).clearDiskCache();
+            Glide.get(imageParam.getContext()).clearMemory();
         }
-        RequestManager manager = Glide.with(imageParam.context);
+        RequestManager manager = Glide.with(imageParam.getContext());
         BitmapTypeRequest glideManager;
-        if (imageParam.imageType == ImageParam.ImageType.URI) {
-            glideManager = manager.load(Uri.parse(imageParam.url)).asBitmap();
-        } else if (imageParam.imageType == ImageParam.ImageType.FILE) {
-            glideManager = manager.load(new File(Uri.parse(imageParam.url).getPath())).asBitmap();
+        if (imageParam.getImageType() == ImageParam.ImageType.URI) {
+            glideManager = manager.load(Uri.parse(imageParam.getUrl())).asBitmap();
+        } else if (imageParam.getImageType() == ImageParam.ImageType.FILE) {
+            glideManager = manager.load(new File(Uri.parse(imageParam.getUrl()).getPath())).asBitmap();
         } else {
-            glideManager = manager.load(imageParam.url).asBitmap();
+            glideManager = manager.load(imageParam.getUrl()).asBitmap();
         }
-        if (imageParam.loadingThumbnail != -1)
-            glideManager.placeholder(imageParam.loadingThumbnail);
-        if (imageParam.errorThumbnail != -1)
-            glideManager.error(imageParam.errorThumbnail);
-        if (imageParam.disableCache) {
+        if (imageParam.getLoadingThumbnail() != -1)
+            glideManager.placeholder(imageParam.getLoadingThumbnail());
+        if (imageParam.getErrorThumbnail() != -1)
+            glideManager.error(imageParam.getErrorThumbnail());
+        if (imageParam.isDisableCache()) {
             glideManager.skipMemoryCache(true);
             glideManager.diskCacheStrategy(DiskCacheStrategy.NONE);
         }
-        if (imageParam.height > 0 && imageParam.width > 0) {
-            glideManager.override(imageParam.width, imageParam.height);
+        if (imageParam.getHeight() > 0 && imageParam.getWidth() > 0) {
+            glideManager.override(imageParam.getWidth(), imageParam.getHeight());
         }
-        if (imageParam.progressBar != null) {
-            imageParam.progressBar.setVisibility(View.VISIBLE);
+        if (imageParam.getProgressBar() != null) {
+            imageParam.getProgressBar().setVisibility(View.VISIBLE);
         }
         glideManager.listener(new GlideRequestListener(imageParam));
-        if (imageParam.transformation != null) {
-            glideManager.transform(imageParam.transformation);
+        if (imageParam.getTransformation() != null) {
+            glideManager.transform(imageParam.getTransformation());
         }
-        glideManager.into(imageParam.imageView);
+        if (imageParam.getImageView() != null)
+            glideManager.into(imageParam.getImageView());
 
     }
 
@@ -100,23 +101,26 @@ public class GlideUtil {
 
         private GlideRequestListener(ImageParam imageParam) {
             this.imageParam = imageParam;
-            if (imageParam.progressBar != null) {
-                imageParam.progressBar.setVisibility(View.VISIBLE);
+            if (imageParam.getProgressBar() != null) {
+                imageParam.getProgressBar().setVisibility(View.VISIBLE);
             }
         }
 
         @Override
         public boolean onException(Exception e, String model, com.bumptech.glide.request.target.Target<Bitmap> target, boolean isFirstResource) {
-            if (imageParam.progressBar != null) {
-                imageParam.progressBar.setVisibility(View.INVISIBLE);
+            if (imageParam.getProgressBar() != null) {
+                imageParam.getProgressBar().setVisibility(View.INVISIBLE);
             }
             return false;
         }
 
         @Override
         public boolean onResourceReady(Bitmap resource, String model, com.bumptech.glide.request.target.Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-            if (imageParam.progressBar != null) {
-                imageParam.progressBar.setVisibility(View.INVISIBLE);
+            if (imageParam.getProgressBar() != null) {
+                imageParam.getProgressBar().setVisibility(View.INVISIBLE);
+            }
+            if (imageParam.getCallback() != null) {
+                imageParam.getCallback().onBitmapReceived(resource, imageParam.getTaskId());
             }
             return false;
         }

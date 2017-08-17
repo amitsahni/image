@@ -11,6 +11,9 @@ android {
         targetSdkVersion 25
     }
     buildTypes {
+        debug {
+            debuggable true
+        }
         release {
             minifyEnabled false
             debuggable false

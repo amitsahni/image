@@ -3,6 +3,7 @@ package com.imageutil;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -20,26 +21,26 @@ public class ImageParam {
     /**
      * The Context.
      */
-    protected Context context;
+    private Context context;
     /**
      * The Activity context.
      */
-    protected Activity activityContext;
+    private Activity activityContext;
     /**
      * The Url.
      */
-    protected String url, /**
+    private String url, /**
      * The Disable cache key.
      */
     disableCacheKey;
     /**
      * The Image type.
      */
-    protected ImageType imageType = ImageType.URL;
+    private ImageType imageType = ImageType.URL;
     /**
      * The Loading thumbnail.
      */
-    protected int loadingThumbnail = -1, /**
+    private int loadingThumbnail = -1, /**
      * The Error thumbnail.
      */
     errorThumbnail = -1, /**
@@ -55,7 +56,7 @@ public class ImageParam {
     /**
      * The Need bitmap.
      */
-    protected boolean needBitmap = false, /**
+    private boolean needBitmap = false, /**
      * The Disable cache.
      */
     disableCache = false, /**
@@ -65,25 +66,25 @@ public class ImageParam {
     /**
      * The Header.
      */
-    protected Map<String, String> header = new LinkedHashMap<>();
+    private Map<String, String> header = new LinkedHashMap<>();
     /**
      * The Image mView.
      */
-    protected ImageView imageView;
+    private ImageView imageView;
     /**
      * The Progress bar.
      */
-    protected ProgressBar progressBar;
+    private ProgressBar progressBar;
     /**
      * The Callback.
      */
-    protected onCallback callback;
+    private onCallback callback;
     /**
      * The Config.
      */
-    protected Bitmap.Config config = Bitmap.Config.RGB_565;
+    private Bitmap.Config config = Bitmap.Config.RGB_565;
 
-    protected Transformation<Bitmap>[] transformation;
+    private Transformation<Bitmap>[] transformation;
 
     /**
      * The enum Image type.
@@ -109,10 +110,9 @@ public class ImageParam {
          * On bitmap received.
          *
          * @param bitmap the bitmap
-         * @param file   the file
          * @param taskId the task id
          */
-        void onBitmapReceived(Bitmap bitmap, File file, int taskId);
+        void onBitmapReceived(Bitmap bitmap, int taskId);
     }
 
     /**
@@ -121,4 +121,271 @@ public class ImageParam {
     public abstract class Callback implements onCallback {
 
     }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public Activity getActivityContext() {
+        return activityContext;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getDisableCacheKey() {
+        return disableCacheKey;
+    }
+
+    public ImageType getImageType() {
+        return imageType;
+    }
+
+    public int getLoadingThumbnail() {
+        return loadingThumbnail;
+    }
+
+    public int getErrorThumbnail() {
+        return errorThumbnail;
+    }
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public boolean isNeedBitmap() {
+        return needBitmap;
+    }
+
+    public boolean isDisableCache() {
+        return disableCache;
+    }
+
+    public boolean isClearCache() {
+        return clearCache;
+    }
+
+    public Map<String, String> getHeader() {
+        return header;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public onCallback getCallback() {
+        return callback;
+    }
+
+    public Bitmap.Config getConfig() {
+        return config;
+    }
+
+    public Transformation<Bitmap>[] getTransformation() {
+        return transformation;
+    }
+
+    /**
+     * The type Builder.
+     */
+    public static class Builder {
+        private ImageParam imageParam;
+
+        /**
+         * Instantiates a new Builder.
+         *
+         * @param context the context
+         * @param url     the url
+         */
+        public Builder(@NonNull Context context, @NonNull String url, @NonNull ImageView imageView) {
+            imageParam = new ImageParam();
+            imageParam.context = context;
+            imageParam.activityContext = null;
+            imageParam.url = url;
+            imageParam.imageView = imageView;
+            imageParam.imageType = ImageType.URL;
+        }
+
+        /**
+         * Instantiates a new Builder.
+         *
+         * @param context the context
+         * @param url     the url
+         */
+        public Builder(@NonNull Activity context, @NonNull String url, @NonNull ImageView imageView) {
+            imageParam = new ImageParam();
+            imageParam.activityContext = context;
+            imageParam.context = context;
+            imageParam.url = url;
+            imageParam.imageView = imageView;
+            imageParam.imageType = ImageType.URL;
+        }
+
+        /**
+         * Image type builder.
+         *
+         * @param imageType the image type
+         * @return the builder
+         */
+        public Builder imageType(@NonNull ImageParam.ImageType imageType) {
+            imageParam.imageType = imageType;
+            return this;
+        }
+
+        /**
+         * Thumbnail builder.
+         *
+         * @param loadingThumb the loading thumb
+         * @param errorThumb   the error thumb
+         * @return the builder
+         */
+        public Builder thumbnail(int loadingThumb, int errorThumb) {
+            imageParam.loadingThumbnail = loadingThumb;
+            imageParam.errorThumbnail = errorThumb;
+            return this;
+        }
+
+        /**
+         * Task id builder.
+         *
+         * @param taskId the task id
+         * @return the builder
+         */
+        public Builder taskId(int taskId) {
+            imageParam.taskId = taskId;
+            return this;
+        }
+
+        /**
+         * Headers builder.
+         *
+         * @param headers the headers
+         * @return the builder
+         */
+        public Builder headers(@NonNull Map<String, String> headers) {
+            imageParam.header = headers;
+            return this;
+        }
+
+        /**
+         * Need bitmap builder.
+         *
+         * @param needBitmap the need bitmap
+         * @param taskId     the task id
+         * @return the builder
+         */
+        public Builder needBitmap(boolean needBitmap, int taskId) {
+            imageParam.needBitmap = needBitmap;
+            imageParam.taskId = taskId;
+            return this;
+        }
+
+        /**
+         * Into builder.
+         *
+         * @param imageView the image mView
+         * @return the builder
+         */
+        public Builder into(@NonNull ImageView imageView) {
+            imageParam.imageView = imageView;
+            return this;
+        }
+
+        /**
+         * Into builder.
+         *
+         * @param imageView   the image mView
+         * @param progressBar the progress bar
+         * @return the builder
+         */
+        public Builder into(@NonNull ImageView imageView, @NonNull ProgressBar progressBar) {
+            imageParam.imageView = imageView;
+            imageParam.progressBar = progressBar;
+            return this;
+        }
+
+        /**
+         * Callback builder.
+         *
+         * @param callback the callback
+         * @return the builder
+         */
+        public Builder callback(@NonNull ImageParam.onCallback callback) {
+            imageParam.callback = callback;
+            return this;
+        }
+
+        /**
+         * Resize builder.
+         *
+         * @param height the height
+         * @param width  the width
+         * @return the builder
+         */
+        public Builder resize(int height, int width) {
+            imageParam.height = height;
+            imageParam.width = width;
+            return this;
+        }
+
+        /**
+         * Disable cache builder.
+         *
+         * @param disableCache the disable cache
+         * @return the builder
+         */
+        public Builder disableCache(boolean disableCache) {
+            imageParam.disableCache = disableCache;
+            return this;
+        }
+
+        /**
+         * Disable cache builder.
+         *
+         * @param key the key
+         * @return the builder
+         */
+        public Builder disableCache(String key) {
+            imageParam.disableCache = true;
+            imageParam.disableCacheKey = key;
+            return this;
+        }
+
+        /**
+         * Clear whole cache builder.
+         *
+         * @return the builder
+         */
+        public Builder clearWholeCache() {
+            imageParam.clearCache = true;
+            return this;
+        }
+
+        public Builder transform(Transformation<Bitmap>... transformations) {
+            imageParam.transformation = transformations;
+            return this;
+        }
+
+        /**
+         * Build.
+         */
+        public void build() {
+            new GlideUtil().setImage(imageParam);
+        }
+    }
+    
+    
 }

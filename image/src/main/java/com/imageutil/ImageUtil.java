@@ -32,9 +32,6 @@ public class ImageUtil {
         return sImageUtil;
     }
 
-    public void enableLog(boolean isEnabled){
-        GlideUtil.LOG_ENABLED = isEnabled;
-    }
     /**
      * With builder.
      *
@@ -43,8 +40,8 @@ public class ImageUtil {
      * @return the builder
      */
     @Deprecated
-    public static Builder with(@NonNull Context context, @NonNull String url) {
-        return new Builder(context, url, null);
+    public static ImageParam.Builder with(@NonNull Context context, @NonNull String url) {
+        return new ImageParam.Builder(context, url, null);
     }
 
     /**
@@ -55,8 +52,8 @@ public class ImageUtil {
      * @return the builder
      */
     @Deprecated
-    public static Builder with(@NonNull Activity context, @NonNull String url) {
-        return new Builder(context, url, null);
+    public static ImageParam.Builder with(@NonNull Activity context, @NonNull String url) {
+        return new ImageParam.Builder(context, url, null);
     }
 
     /**
@@ -66,8 +63,8 @@ public class ImageUtil {
      * @param url     the url
      * @return the builder
      */
-    public static Builder with(@NonNull Context context, @NonNull String url, @NonNull ImageView imageView) {
-        return new Builder(context, url, imageView);
+    public static ImageParam.Builder with(@NonNull Context context, @NonNull String url, @NonNull ImageView imageView) {
+        return new ImageParam.Builder(context, url, imageView);
     }
 
     /**
@@ -77,7 +74,7 @@ public class ImageUtil {
      * @param url     the url
      * @return the builder
      */
-    public static Builder with(@NonNull Activity context, @NonNull String url, @NonNull ImageView imageView) {
-        return new Builder(context, url, imageView);
+    public static ImageParam.Builder with(@NonNull Activity context, @NonNull String url, @NonNull ImageView imageView) {
+        return new ImageParam.Builder(context, url, imageView);
     }
 }
