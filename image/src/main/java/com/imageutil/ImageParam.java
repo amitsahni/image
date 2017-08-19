@@ -84,7 +84,9 @@ public class ImageParam {
      */
     private Bitmap.Config config = Bitmap.Config.RGB_565;
 
-    private Transformation<Bitmap>[] transformation;
+    private Transformation<Bitmap> transformation;
+
+    private ImageView.ScaleType scaleType = null;
 
     /**
      * The enum Image type.
@@ -194,8 +196,12 @@ public class ImageParam {
         return config;
     }
 
-    public Transformation<Bitmap>[] getTransformation() {
+    public Transformation<Bitmap> getTransformation() {
         return transformation;
+    }
+
+    public ImageView.ScaleType getScaleType() {
+        return scaleType;
     }
 
     /**
@@ -374,8 +380,13 @@ public class ImageParam {
             return this;
         }
 
-        public Builder transform(Transformation<Bitmap>... transformations) {
+        public Builder transform(Transformation<Bitmap> transformations) {
             imageParam.transformation = transformations;
+            return this;
+        }
+
+        public Builder scaleType(@NonNull ImageView.ScaleType scaleType) {
+            imageParam.scaleType = scaleType;
             return this;
         }
 
@@ -386,6 +397,6 @@ public class ImageParam {
             new GlideUtil().setImage(imageParam);
         }
     }
-    
-    
+
+
 }
