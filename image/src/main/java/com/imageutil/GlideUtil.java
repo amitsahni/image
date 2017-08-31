@@ -135,7 +135,8 @@ public class GlideUtil {
             if (imageParam.getProgressBar() != null) {
                 imageParam.getProgressBar().setVisibility(View.INVISIBLE);
             }
-            if (imageParam.getCallback() != null) {
+            if (imageParam.getCallback() != null
+                    && imageParam.isNeedBitmap()) {
                 imageParam.getCallback().onBitmapReceived(resource, imageParam.getTaskId());
             }
             return false;

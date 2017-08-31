@@ -6,6 +6,41 @@ ImageUtil.with(this,"url",imageView)
                 .scaleType(ImageView.ScaleType.MATRIX)
                 .build();
 ```
+### Other methods
+
+#### callback
+```
+ .callback(new ImageParam.onCallback() {
+                    @Override
+                    public void onBitmapReceived(Bitmap bitmap, int taskId) {
+                        
+                    }
+                })
+                .needBitmap(true,100)              
+```
+#### ClearWholeCache
+```
+.clearWholeCache()                
+```
+#### Disable Cache & Disable Cache with Key
+
+```
+.disableCache(true) - If set then caching will be disabled
+.disableCache(url) - If set for this url caching will be disabled
+                
+```
+#### Header 
+```
+If want to pass header in Image loading
+
+.headers(new LinkedHashMap<String, String>())
+```
+#### Bitmap Transformation
+Use [Bitmap Transforation Lib](https://github.com/wasabeef/glide-transformations) 
+```
+.transform(bitmaptransformation)
+```
+
 
 # ImageType
 ```
@@ -24,6 +59,9 @@ Download
 --------
 Add the JitPack repository to your root build.gradle:
 
+[](https://jitpack.io/v/amitclickapps/retrofit-util.svg?style=flat-square)
+
+
 ```groovy
 	allprojects {
 		repositories {
@@ -34,6 +72,6 @@ Add the JitPack repository to your root build.gradle:
 Add the Gradle dependency:
 ```groovy
 	dependencies {
-		compile 'com.github.amitclickapps:image-util:1.0.1'
+		compile 'com.github.amitclickapps:image-util:latest'
 	}
 ```
