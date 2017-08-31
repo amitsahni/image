@@ -9,7 +9,6 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.load.Transformation;
 
-import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -296,30 +295,6 @@ public class ImageParam {
         public Builder needBitmap(boolean needBitmap, int taskId) {
             imageParam.needBitmap = needBitmap;
             imageParam.taskId = taskId;
-            return this;
-        }
-
-        /**
-         * Into builder.
-         *
-         * @param imageView the image mView
-         * @return the builder
-         */
-        public Builder into(@NonNull ImageView imageView) {
-            imageParam.imageView = imageView;
-            return this;
-        }
-
-        /**
-         * Into builder.
-         *
-         * @param imageView   the image mView
-         * @param progressBar the progress bar
-         * @return the builder
-         */
-        public Builder into(@NonNull ImageView imageView, @NonNull ProgressBar progressBar) {
-            imageParam.imageView = imageView;
-            imageParam.progressBar = progressBar;
             return this;
         }
 
