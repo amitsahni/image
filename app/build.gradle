@@ -14,9 +14,6 @@ android {
 
     }
     buildTypes {
-        debug{
-            debuggable true
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -45,4 +42,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile project(':image')
 //    compile 'com.github.amitclickapps:image-util:version_1.0.2-SNAPSHOT'
+//    compile 'com.github.amitclickapps:image-util:1.0.2'
 }
