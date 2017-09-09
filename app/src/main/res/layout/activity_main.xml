@@ -14,36 +14,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:text="CenterInside" />
+            android:text="Listing" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_width="108dp"
+            android:layout_height="108dp"
+            android:background="@android:color/black"
+            android:layout_gravity="center"
             android:scaleType="centerInside" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:text="centerCrop" />
+            android:text="Detail" />
 
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="240dp"
+            android:background="@android:color/black"
             android:scaleType="centerCrop" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:text="fitXY" />
+            android:text="Full View" />
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:minHeight="240dp"
             android:scaleType="fitXY" />
 
         <TextView

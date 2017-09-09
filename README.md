@@ -1,5 +1,12 @@
 # ImageUtils  [![](https://jitpack.io/v/amitclickapps/image-util.svg)](https://jitpack.io/#amitclickapps/image-util)
-
+#### ImageConfiguration
+```
+ new ImageConfiguration.Builder()
+                .timeOut(50 * 1000L, 60 * 1000L)
+                .isDebug(false)
+                .config();
+```
+#### General Use
 ```
 ImageUtil.with(this,"url",imageView)
                 .thumbnail(R.drawable.cheese_1,R.drawable.cheese_2)
@@ -40,7 +47,21 @@ Use [Bitmap Transforation Lib](https://github.com/wasabeef/glide-transformations
 ```
 .transform(bitmaptransformation)
 ```
-
+#### DownloadOnly
+```
+ImageUtil.with(this, url)
+                .scaleType(ImageView.ScaleType.FIT_CENTER)
+                .needBitmap(true, 1)
+                .callback(new ImageParam.onCallback() {
+                    @Override
+                    public void onBitmapReceived(Bitmap bitmap, int taskId) {
+                        if (bitmap != null) {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    }
+                })
+                .build();
+```
 
 # ImageType
 ```

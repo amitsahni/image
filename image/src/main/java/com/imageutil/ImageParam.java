@@ -240,6 +240,24 @@ public class ImageParam {
         }
 
         /**
+         * Instantiates a new Builder.
+         * <p>
+         * Only download
+         *
+         * @param context the context
+         * @param url     the url
+         * @see #needBitmap(boolean, int)
+         * @see #callback(onCallback)
+         */
+        public Builder(@NonNull Context context, @NonNull String url) {
+            imageParam = new ImageParam();
+            imageParam.activityContext = null;
+            imageParam.context = context;
+            imageParam.url = url;
+            imageParam.imageType = ImageType.URL;
+        }
+
+        /**
          * Image type builder.
          *
          * @param imageType the image type

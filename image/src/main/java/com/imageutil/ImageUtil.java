@@ -62,4 +62,17 @@ public class ImageUtil {
     public static ImageParam.Builder with(@NonNull Activity context, @NonNull String url, @NonNull ImageView imageView) {
         return new ImageParam.Builder(context, url, imageView);
     }
+
+    /**
+     * With builder.
+     * <p>
+     * OnlyDownload
+     *
+     * @param context the context
+     * @param url     the url
+     * @return the builder
+     */
+    public static ImageParam.Builder with(@NonNull Context context, @NonNull String url) {
+        return new ImageParam.Builder(context, url);
+    }
 }

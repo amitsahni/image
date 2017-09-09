@@ -15,7 +15,9 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +37,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 public class GlideUtil {
     private OkHttpClient.Builder mOkHttpClientBuilder = new OkHttpClient.Builder();
-    private static final long CONNECT_TIMEOUT_MILLIS = 10 * 1000, READ_TIMEOUT_MILLIS = 20 * 1000;
     private HttpLoggingInterceptor mInterceptor = new HttpLoggingInterceptor();
     public static boolean LOG_ENABLED = false;
 
@@ -45,11 +46,13 @@ public class GlideUtil {
      * @param imageParam the image param
      */
     public void setImage(final ImageParam imageParam) {
-        if (BuildConfig.DEBUG) {
+        if (ImageConfiguration.isDebug()) {
             mInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            mInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
-        mOkHttpClientBuilder.connectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        mOkHttpClientBuilder.readTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        mOkHttpClientBuilder.connectTimeout(ImageConfiguration.getConnectTimeOut(), TimeUnit.MILLISECONDS);
+        mOkHttpClientBuilder.readTimeout(ImageConfiguration.getReadTimeOut(), TimeUnit.MILLISECONDS);
         mOkHttpClientBuilder.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -98,16 +101,26 @@ public class GlideUtil {
         if (imageParam.getProgressBar() != null) {
             imageParam.getProgressBar().setVisibility(View.VISIBLE);
         }
-        requestBuilder.listener(new GlideRequestListener(imageParam));
         if (imageParam.getTransformation() != null) {
             options.transform(imageParam.getTransformation());
         }
         requestBuilder.apply(options);
         if (imageParam.getImageView() != null) {
+            requestBuilder.listener(new GlideRequestListener(imageParam));
             if (imageParam.getScaleType() != null) {
                 imageParam.getImageView().setScaleType(imageParam.getScaleType());
             }
             requestBuilder.into(imageParam.getImageView());
+        } else {
+            requestBuilder.into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    if (imageParam.getCallback() != null
+                            && imageParam.isNeedBitmap()) {
+                        imageParam.getCallback().onBitmapReceived(resource, imageParam.getTaskId());
+                    }
+                }
+            });
         }
 
     }
