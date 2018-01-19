@@ -19,16 +19,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-//    configurations.all {
-//        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-//        resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
-//    }
-//    allprojects {
-//        repositories {
-//            maven { url 'https://jitpack.io' }
-//        }
-//    }
 }
 
 dependencies {
@@ -40,6 +30,4 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile project(':image')
-//    compile 'com.github.amitclickapps:image-util:version_1.0.2-SNAPSHOT'
-//    compile 'com.github.amitclickapps:image-util:1.0.2'
 }

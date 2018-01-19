@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.amitclickapps'
-version = '1.0.4'
+group = 'com.github.amitsahni'
+version = '1.0.0'
 
 android {
     compileSdkVersion 27
@@ -25,12 +25,11 @@ repositories {
     mavenCentral() // jcenter() works as well because it pulls from Maven Central
 }
 dependencies {
-    compile 'com.android.support:appcompat-v7:27.0.2'
-    /* ImageLoading */
-    compile 'com.github.bumptech.glide:glide:4.3.1'
-    compile 'com.github.bumptech.glide:okhttp3-integration:4.3.1'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.9.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.3.0'
+    compile deps.appcomat
+    compile deps.glide
+    compile deps.okhttp3
+    compile deps.logging
+    annotationProcessor deps.glideCompiler
 }
 
 // build a jar with source files
