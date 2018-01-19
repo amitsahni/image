@@ -45,7 +45,19 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ImageUtil.with(this)
                 .download(url)
-                .downloadListener(new DownloadListener() {
+                .taskId(1)
+                .progressListener(new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength) {
+
+                    }
+                })
+                .loaderListener(new LoaderListener() {
+                    @Override
+                    public void loader(boolean isLoader) {
+
+                    }
+                }).downloadListener(new DownloadListener() {
                     @Override
                     public void download(Bitmap bitmap, int taskId) {
 
@@ -55,6 +67,19 @@ public class MainActivity extends AppCompatActivity {
 
         ImageUtil.with(this)
                 .url(url, imageView1)
+                .progressListener(new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength) {
+
+                    }
+                })
+                .loaderListener(new LoaderListener() {
+                    @Override
+                    public void loader(boolean isLoader) {
+
+                    }
+                })
+
                 .scaleType(ImageView.ScaleType.FIT_CENTER)
                 .build();
 

@@ -33,7 +33,7 @@ public class RequestBuilder {
 
 
     @SuppressWarnings("CheckResult")
-    public static class GalleryBuilder implements ImageProperty<GalleryBuilder> {
+    public static class GalleryBuilder<T extends GalleryBuilder> implements ImageProperty<T> {
         ImageParam param;
 
         public GalleryBuilder(ImageParam param) {
@@ -41,52 +41,52 @@ public class RequestBuilder {
         }
 
         @Override
-        public GalleryBuilder thumbnail(int loadingThumb, int errorThumb) {
+        public T thumbnail(int loadingThumb, int errorThumb) {
             param.loadingThumbnail = loadingThumb;
             param.errorThumbnail = errorThumb;
-            return this;
+            return (T) this;
         }
 
         @Override
-        public GalleryBuilder header(@NonNull Map<String, String> headers) {
+        public T header(@NonNull Map<String, String> headers) {
             param.header = headers;
-            return this;
+            return (T) this;
         }
 
         @Override
-        public GalleryBuilder resize(int height, int width) {
+        public T resize(int height, int width) {
             param.height = height;
             param.width = width;
-            return this;
+            return (T) this;
         }
 
         @Override
-        public GalleryBuilder cache(boolean isCache) {
+        public T cache(boolean isCache) {
             param.disableCache = isCache;
-            return this;
+            return (T) this;
         }
 
         @Override
-        public GalleryBuilder transform(Transformation<Bitmap> transformations) {
+        public T transform(Transformation<Bitmap> transformations) {
             param.transformation = transformations;
-            return this;
+            return (T) this;
         }
 
         @Override
-        public GalleryBuilder progressListener(@NonNull ProgressListener listener) {
+        public T progressListener(@NonNull ProgressListener listener) {
             param.progressListener = listener;
-            return this;
+            return (T) this;
         }
 
         @Override
-        public GalleryBuilder loaderListener(@NonNull LoaderListener listener) {
+        public T loaderListener(@NonNull LoaderListener listener) {
             param.loaderListener = listener;
-            return this;
+            return (T) this;
         }
 
-        public GalleryBuilder scaleType(@NonNull ImageView.ScaleType scaleType) {
+        public T scaleType(@NonNull ImageView.ScaleType scaleType) {
             param.scaleType = scaleType;
-            return this;
+            return (T) this;
         }
 
         public void build() {
@@ -131,7 +131,7 @@ public class RequestBuilder {
         }
     }
 
-    public static class FileBuilder extends GalleryBuilder {
+    public static class FileBuilder extends GalleryBuilder<FileBuilder> {
 
         public FileBuilder(ImageParam param) {
             super(param);
@@ -179,7 +179,7 @@ public class RequestBuilder {
         }
     }
 
-    public static class UrlBuilder extends GalleryBuilder {
+    public static class UrlBuilder extends GalleryBuilder<UrlBuilder> {
 
         public UrlBuilder(ImageParam param) {
             super(param);
@@ -227,7 +227,7 @@ public class RequestBuilder {
         }
     }
 
-    public static class DownloadBuilder extends GalleryBuilder {
+    public static class DownloadBuilder extends GalleryBuilder<DownloadBuilder> {
 
         public DownloadBuilder(ImageParam param) {
             super(param);
