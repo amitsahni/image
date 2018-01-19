@@ -1,11 +1,15 @@
 package test.image;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.imageutil.ImageUtil;
+import com.imageutil.listener.DownloadListener;
+import com.imageutil.listener.LoaderListener;
+import com.imageutil.listener.ProgressListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,30 +43,48 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        ImageUtil.with(this, url, imageView)
+        ImageUtil.with(this)
+                .download(url)
+                .downloadListener(new DownloadListener() {
+                    @Override
+                    public void download(Bitmap bitmap, int taskId) {
+
+                    }
+                })
+                .build();
+
+        ImageUtil.with(this)
+                .url(url, imageView1)
                 .scaleType(ImageView.ScaleType.FIT_CENTER)
                 .build();
-        ImageUtil.with(this, url, imageView1)
-                .scaleType(ImageView.ScaleType.FIT_CENTER)
-                .build();
-        ImageUtil.with(this, url, imageView2)
+
+        ImageUtil.with(this)
+                .url(url, imageView2)
                 .scaleType(ImageView.ScaleType.FIT_XY)
                 .build();
 
-        ImageUtil.with(this, url, imageView3)
+        ImageUtil.with(this)
+                .url(url, imageView3)
                 .scaleType(ImageView.ScaleType.CENTER)
                 .build();
-        ImageUtil.with(this, url, imageView4)
+
+        ImageUtil.with(this)
+                .url(url, imageView4)
                 .scaleType(ImageView.ScaleType.FIT_END)
                 .build();
-        ImageUtil.with(this, url, imageView5)
+
+        ImageUtil.with(this)
+                .url(url, imageView5)
                 .scaleType(ImageView.ScaleType.MATRIX)
                 .build();
-        ImageUtil.with(this, url, imageView6)
+
+        ImageUtil.with(this)
+                .url(url, imageView6)
                 .scaleType(ImageView.ScaleType.FIT_CENTER)
                 .build();
 
-        ImageUtil.with(this, url, imageView7)
+        ImageUtil.with(this)
+                .url(url, imageView7)
                 .scaleType(ImageView.ScaleType.FIT_START)
                 .build();
     }

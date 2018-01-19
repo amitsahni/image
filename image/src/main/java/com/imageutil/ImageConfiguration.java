@@ -10,9 +10,9 @@ import java.io.Serializable;
 
 public class ImageConfiguration implements Serializable {
 
-    private static long sCONNECT_TIME_OUT = 10 * 1000L;
-    private static long sREAD_TIME_OUT = 20 * 1000L;
-    private static boolean sIS_DEBUG = true;
+    static long sCONNECT_TIME_OUT = 10 * 1000L;
+    static long sREAD_TIME_OUT = 20 * 1000L;
+    static boolean sIS_DEBUG = true;
 
     public static long getConnectTimeOut() {
         return sCONNECT_TIME_OUT;
@@ -53,4 +53,5 @@ public class ImageConfiguration implements Serializable {
         }
 
     }
+
 }

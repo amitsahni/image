@@ -1,4 +1,3 @@
-# ImageUtils  [![](https://jitpack.io/v/amitclickapps/image-util.svg)](https://jitpack.io/#amitclickapps/image-util)
 #### ImageConfiguration
 ```
  new ImageConfiguration.Builder()
@@ -8,80 +7,105 @@
 ```
 #### General Use
 ```
-ImageUtil.with(this,"url",imageView)
-                .thumbnail(R.drawable.cheese_1,R.drawable.cheese_2)
-                .scaleType(ImageView.ScaleType.MATRIX)
+ImageUtil.with(this)
+                .url(url, imageView)
                 .build();
+```
+#### ClearWholeCache
+```
+ImageUtil.get().clearCache(this);               
 ```
 ### Other methods
 
 #### callback
 ```
- .callback(new ImageParam.onCallback() {
-                    @Override
-                    public void onBitmapReceived(Bitmap bitmap, int taskId) {
-                        
-                    }
-                })
-                .needBitmap(true,100)              
+ .loaderListener(new LoaderListener() {
+                     @Override
+                     public void loader(boolean isLoader) {
+                         
+                     }
+                 })
+  .progressListener(new ProgressListener() {
+                     @Override
+                     public void update(long bytesRead, long contentLength) {
+                            
+                        }
+                    }) 
+  .downloadListener(new DownloadListener() {
+                      @Override
+                      public void download(Bitmap bitmap, int taskId) {
+                          
+                      }
+                  })                      
 ```
-#### ClearWholeCache
-```
-.clearWholeCache()                
-```
-#### Disable Cache & Disable Cache with Key
+
+#### Disable Cache
 
 ```
-.disableCache(true) - If set then caching will be disabled
-.disableCache(url) - If set for this url caching will be disabled
-                
+.disableCache(true) - If set then caching will be disabled              
 ```
 #### Header 
 ```
-If want to pass header in Image loading
-
-.headers(new LinkedHashMap<String, String>())
+.header(new LinkedHashMap<String, String>())
 ```
 #### Bitmap Transformation
 Use [Bitmap Transforation Lib](https://github.com/wasabeef/glide-transformations) 
 ```
 .transform(bitmaptransformation)
 ```
+##### ScaleType
+```
+.scaleType(ImageView.ScaleType.CENTER_CROP)
+```
+##### Resize
+```
+ .resize(100,100)
+```
+##### Thumbnail
+```
+.thumbnail(loading,error)
+```
+#### Url
+```
+ImageUtil.with(this)
+                .url(url, imageView1)
+                .scaleType(ImageView.ScaleType.FIT_CENTER)
+                .build();
+```
+#### Gallery
+```
+ImageUtil.with(this)
+                .gallery(uri, imageView1)
+                .scaleType(ImageView.ScaleType.FIT_CENTER)
+                .build();
+```
+#### File
+```
+ImageUtil.with(this)
+                .gallery(file, imageView1)
+                .scaleType(ImageView.ScaleType.FIT_CENTER)
+                .build();
+```
 #### DownloadOnly
 ```
-ImageUtil.with(this, url)
-                .scaleType(ImageView.ScaleType.FIT_CENTER)
-                .needBitmap(true, 1)
-                .callback(new ImageParam.onCallback() {
+ImageUtil.with(this)
+                .download(url)
+                .taskId(1)
+                .downloadListener(new DownloadListener() {
                     @Override
-                    public void onBitmapReceived(Bitmap bitmap, int taskId) {
-                        if (bitmap != null) {
-                            imageView.setImageBitmap(bitmap);
-                        }
+                    public void download(Bitmap bitmap, int taskId) {
+                        
                     }
                 })
                 .build();
 ```
 
-# ImageType
-```
-URL - By Default
-URI - Gallery Path
-File - Sdcard Path
-```
-##### ScaleType
-```
-If not passed then whatever assigned to ImageView is automatically picked up.
-If passed then passed scaleType will be used.
 
-```
+
 
 Download
 --------
 Add the JitPack repository to your root build.gradle:
-
-[](https://jitpack.io/v/amitclickapps/retrofit-util.svg?style=flat-square)
-
 
 ```groovy
 	allprojects {
@@ -93,6 +117,6 @@ Add the JitPack repository to your root build.gradle:
 Add the Gradle dependency:
 ```groovy
 	dependencies {
-		compile 'com.github.amitclickapps:image-util:latest'
+		compile 'com.github.amitsahni:image:1.0.0'
 	}
 ```
