@@ -82,7 +82,7 @@ ImageUtil.with(this)
 #### File
 ```
 ImageUtil.with(this)
-                .gallery(file, imageView1)
+                .file(file, imageView1)
                 .scaleType(ImageView.ScaleType.FIT_CENTER)
                 .build();
 ```
