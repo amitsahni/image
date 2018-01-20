@@ -5,5 +5,5 @@ package com.imageutil.listener;
  */
 
 public interface ProgressListener {
-    void update(long bytesRead, long contentLength);
+    void update(long bytesRead, long contentLength, int progress);
 }

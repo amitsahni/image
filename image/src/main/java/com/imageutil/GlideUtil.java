@@ -3,6 +3,7 @@ package com.imageutil;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -113,8 +114,17 @@ public class GlideUtil {
                     long bytesRead = super.read(sink, byteCount);
                     // read() returns the number of bytes read, or -1 if this source is exhausted.
                     totalBytesRead += bytesRead != -1 ? bytesRead : 0;
+                    long length = responseBody.contentLength();
+                    int progress = 0;
+                    try {
+                        progress = (int) ((100 * totalBytesRead) / length);
+                    } catch (Exception e) {
+                        if (ImageConfiguration.isDebug()) {
+                            Log.e(getClass().getSimpleName(), "Exception = " + e.getMessage());
+                        }
+                    }
                     if (imageParam.progressListener != null)
-                        imageParam.progressListener.update(totalBytesRead, responseBody.contentLength());
+                        imageParam.progressListener.update(totalBytesRead, length, progress);
                     return bytesRead;
                 }
             };

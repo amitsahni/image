@@ -23,6 +23,8 @@ public interface ImageProperty<T> {
 
     T cache(boolean isCache);
 
+    T tasKId(int taskId);
+
     T transform(Transformation<Bitmap> transformations);
 
     T progressListener(@NonNull ProgressListener listener);

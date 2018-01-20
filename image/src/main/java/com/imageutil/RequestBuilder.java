@@ -71,6 +71,12 @@ public class RequestBuilder {
         }
 
         @Override
+        public T tasKId(int taskId) {
+            param.taskId = taskId;
+            return (T) this;
+        }
+
+        @Override
         public T transform(Transformation<Bitmap> transformations) {
             param.transformation = transformations;
             return (T) this;
@@ -246,11 +252,6 @@ public class RequestBuilder {
 
         public DownloadBuilder(ImageParam param) {
             super(param);
-        }
-
-        public DownloadBuilder taskId(int taskId) {
-            param.taskId = taskId;
-            return this;
         }
 
         public DownloadBuilder downloadListener(@NonNull DownloadListener listener) {

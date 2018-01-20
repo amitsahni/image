@@ -50,10 +50,9 @@ public class MainActivity extends AppCompatActivity {
                 .config();
         ImageUtil.with(this)
                 .download(url)
-                .taskId(1)
                 .progressListener(new ProgressListener() {
                     @Override
-                    public void update(long bytesRead, long contentLength) {
+                    public void update(long bytesRead, long contentLength, int progress) {
                         Log.i(getLocalClassName(), "Byte = " + bytesRead);
                         Log.i(getLocalClassName(), "contentLength = " + contentLength);
                     }
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 .url(url, imageView1)
                 .progressListener(new ProgressListener() {
                     @Override
-                    public void update(long bytesRead, long contentLength) {
+                    public void update(long bytesRead, long contentLength, int progress) {
                         Log.i(getLocalClassName(), "Byte = " + bytesRead);
                         Log.i(getLocalClassName(), "contentLength = " + contentLength);
                     }
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 .url(url, imageView2)
                 .progressListener(new ProgressListener() {
                     @Override
-                    public void update(long bytesRead, long contentLength) {
+                    public void update(long bytesRead, long contentLength, int progress) {
                         Log.i(getLocalClassName(), "Byte = " + bytesRead);
                         Log.i(getLocalClassName(), "contentLength = " + contentLength);
                     }
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 .url(url, imageView3)
                 .progressListener(new ProgressListener() {
                     @Override
-                    public void update(long bytesRead, long contentLength) {
+                    public void update(long bytesRead, long contentLength, int progress) {
                         Log.i(getLocalClassName(), "Byte = " + bytesRead);
                         Log.i(getLocalClassName(), "contentLength = " + contentLength);
                     }
@@ -130,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 .url(url, imageView4)
                 .progressListener(new ProgressListener() {
                     @Override
-                    public void update(long bytesRead, long contentLength) {
+                    public void update(long bytesRead, long contentLength, int progress) {
                         Log.i(getLocalClassName(), "Byte = " + bytesRead);
                         Log.i(getLocalClassName(), "contentLength = " + contentLength);
                     }
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 .url(url, imageView5)
                 .progressListener(new ProgressListener() {
                     @Override
-                    public void update(long bytesRead, long contentLength) {
+                    public void update(long bytesRead, long contentLength, int progress) {
                         Log.i(getLocalClassName(), "Byte = " + bytesRead);
                         Log.i(getLocalClassName(), "contentLength = " + contentLength);
                     }
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 .url(url, imageView6)
                 .progressListener(new ProgressListener() {
                     @Override
-                    public void update(long bytesRead, long contentLength) {
+                    public void update(long bytesRead, long contentLength, int progress) {
                         Log.i(getLocalClassName(), "Byte = " + bytesRead);
                         Log.i(getLocalClassName(), "contentLength = " + contentLength);
                     }
@@ -184,9 +183,8 @@ public class MainActivity extends AppCompatActivity {
                 .url(url + "fasdfasdfasdfasdf", imageView7)
                 .progressListener(new ProgressListener() {
                     @Override
-                    public void update(long bytesRead, long contentLength) {
-                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
-                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                    public void update(long bytesRead, long contentLength, int progress) {
+                        Log.i(getLocalClassName(), "progress = " + progress);
                     }
                 })
                 .loaderListener(new LoaderListener() {
