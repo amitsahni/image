@@ -1,6 +1,7 @@
 package com.imageutil;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
@@ -47,10 +48,12 @@ public class ImageUtil {
 
     public void clearCache(@NonNull final Context context) {
         Glide.get(context).clearMemory();
-        new Thread(new Runnable() {
-            public void run() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
                 Glide.get(context).clearDiskCache();
+                return null;
             }
-        }).start();
+        }.execute();
     }
 }

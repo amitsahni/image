@@ -13,6 +13,9 @@ import com.imageutil.listener.DownloadListener;
 import com.imageutil.listener.LoaderListener;
 import com.imageutil.listener.ProgressListener;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 .config();
         ImageUtil.with(this)
                 .download(url)
+                .tasKId(1)
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {
@@ -70,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setImageBitmap(bitmap);
             }
         }).build();
-
         ImageUtil.with(this)
-                .url(url, imageView1)
+                .url(url + "fasdfasdfasdfasdf", imageView1)
+                .tasKId(2)
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {
@@ -180,7 +184,8 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         ImageUtil.with(this)
-                .url(url + "fasdfasdfasdfasdf", imageView7)
+                .url(url, imageView7)
+                .tasKId(10)
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {

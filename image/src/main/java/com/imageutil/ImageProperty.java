@@ -17,8 +17,6 @@ public interface ImageProperty<T> {
 
     T thumbnail(int loadingThumb, int errorThumb);
 
-    T header(@NonNull Map<String, String> headers);
-
     T resize(int height, int width);
 
     T cache(boolean isCache);

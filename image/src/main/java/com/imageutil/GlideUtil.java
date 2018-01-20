@@ -7,12 +7,15 @@ import android.util.Log;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import net.jcip.annotations.ThreadSafe;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +26,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okhttp3.internal.cache.CacheInterceptor;
+import okhttp3.internal.http.CallServerInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
 import okio.BufferedSource;
@@ -71,12 +76,22 @@ public class GlideUtil {
             interceptor.setLevel(ImageConfiguration.sIS_DEBUG ?
                     HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
             builder.addInterceptor(interceptor);
+            builder.addNetworkInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request request = chain.request();
+                    Response response = chain.proceed(request);
+                    return response.newBuilder()
+                            .body(new GlideUtil.ProgressResponseBody(response.body(), imageParam))
+                            .build();
+                }
+            });
             okHttpClient = builder.build();
         }
         return okHttpClient;
     }
 
-    public static class ProgressResponseBody extends ResponseBody {
+    public class ProgressResponseBody extends ResponseBody {
 
         private final ResponseBody responseBody;
         private final ImageParam imageParam;
@@ -131,19 +146,12 @@ public class GlideUtil {
         }
     }
 
-    OkHttpClient addHeader(@NonNull final Map<String, String> header) {
-        return okHttpClient.newBuilder()
-                .addNetworkInterceptor(new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        Request request = chain.request();
-                        for (Map.Entry<String, String> entry : header.entrySet()) {
-                            request = request.newBuilder().addHeader(entry.getKey(), entry.getValue()).build();
-                        }
-                        return chain.proceed(request);
-                    }
-                })
-                .build();
+    LazyHeaders addHeader(@NonNull final Map<String, String> header) {
+        LazyHeaders.Builder builder = new LazyHeaders.Builder();
+        for (Map.Entry<String, String> entry : header.entrySet()) {
+            builder.addHeader(entry.getKey(), entry.getValue());
+        }
+        return builder.build();
     }
 
     static class GlideRequestListener implements RequestListener<Bitmap> {

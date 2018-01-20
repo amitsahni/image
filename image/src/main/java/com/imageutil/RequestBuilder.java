@@ -20,14 +20,10 @@ import com.imageutil.listener.LoaderListener;
 import com.imageutil.listener.ProgressListener;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by clickapps on 19/1/18.
@@ -48,12 +44,6 @@ public class RequestBuilder {
         public T thumbnail(int loadingThumb, int errorThumb) {
             param.loadingThumbnail = loadingThumb;
             param.errorThumbnail = errorThumb;
-            return (T) this;
-        }
-
-        @Override
-        public T header(@NonNull Map<String, String> headers) {
-            param.header = headers;
             return (T) this;
         }
 
@@ -103,9 +93,6 @@ public class RequestBuilder {
             if (param.context == null) return;
             GlideUtil glideUtil = GlideUtil.get();
             OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
-            if (!param.header.isEmpty()) {
-                okHttpClient = glideUtil.addHeader(param.header);
-            }
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
             Glide.get(param.context).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
@@ -151,9 +138,6 @@ public class RequestBuilder {
             if (param.context == null) return;
             GlideUtil glideUtil = GlideUtil.get();
             OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
-            if (!param.header.isEmpty()) {
-                okHttpClient = glideUtil.addHeader(param.header);
-            }
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
             Glide.get(param.context).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
@@ -195,30 +179,27 @@ public class RequestBuilder {
             super(param);
         }
 
+        public UrlBuilder header(@NonNull Map<String, String> headers) {
+            param.header = headers;
+            return this;
+        }
+
         public void build() {
             if (param.context == null) return;
             GlideUtil glideUtil = GlideUtil.get();
             OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
+            GlideUrl glideUrl;
             if (!param.header.isEmpty()) {
-                okHttpClient = glideUtil.addHeader(param.header);
+                glideUrl = new GlideUrl(param.url, glideUtil.addHeader(param.header));
+            } else {
+                glideUrl = new GlideUrl(param.url);
             }
-            okHttpClient = okHttpClient.newBuilder()
-                    .addInterceptor(new Interceptor() {
-                        @Override
-                        public Response intercept(Chain chain) throws IOException {
-                            Request request = chain.request();
-                            Response response = chain.proceed(request);
-                            return response.newBuilder()
-                                    .body(new GlideUtil.ProgressResponseBody(response.body(), param))
-                                    .build();
-                        }
-                    }).build();
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
             Glide.get(param.context).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
             RequestOptions options = new RequestOptions();
             RequestManager manager = Glide.with(param.context);
-            requestBuilder = manager.asBitmap().load(param.url);
+            requestBuilder = manager.asBitmap().load(glideUrl);
             if (param.loadingThumbnail != -1) {
                 options.placeholder(param.loadingThumbnail);
             } else {
@@ -259,19 +240,27 @@ public class RequestBuilder {
             return this;
         }
 
+        public DownloadBuilder header(@NonNull Map<String, String> headers) {
+            param.header = headers;
+            return this;
+        }
+
         public void build() {
             if (param.context == null) return;
             GlideUtil glideUtil = GlideUtil.get();
             OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
+            GlideUrl glideUrl;
             if (!param.header.isEmpty()) {
-                okHttpClient = glideUtil.addHeader(param.header);
+                glideUrl = new GlideUrl(param.url, glideUtil.addHeader(param.header));
+            } else {
+                glideUrl = new GlideUrl(param.url);
             }
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
             Glide.get(param.context).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
             RequestOptions options = new RequestOptions();
             RequestManager manager = Glide.with(param.context);
-            requestBuilder = manager.asBitmap().load(param.url);
+            requestBuilder = manager.asBitmap().load(glideUrl);
             if (param.loadingThumbnail != -1) {
                 options.placeholder(param.loadingThumbnail);
             } else {
