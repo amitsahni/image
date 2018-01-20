@@ -4,8 +4,10 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
 
+import com.imageutil.ImageConfiguration;
 import com.imageutil.ImageUtil;
 import com.imageutil.listener.DownloadListener;
 import com.imageutil.listener.LoaderListener;
@@ -43,73 +45,156 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        new ImageConfiguration.Builder()
+                .isDebug(true)
+                .config();
         ImageUtil.with(this)
                 .download(url)
                 .taskId(1)
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength) {
-
+                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
+                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
                     }
                 })
                 .loaderListener(new LoaderListener() {
                     @Override
                     public void loader(boolean isLoader) {
-
+                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
                     }
                 }).downloadListener(new DownloadListener() {
-                    @Override
-                    public void download(Bitmap bitmap, int taskId) {
-
-                    }
-                })
-                .build();
+            @Override
+            public void download(Bitmap bitmap, int taskId) {
+                Log.i(getLocalClassName(), "bitmap = " + bitmap);
+                Log.i(getLocalClassName(), "taskId = " + taskId);
+                imageView.setImageBitmap(bitmap);
+            }
+        }).build();
 
         ImageUtil.with(this)
                 .url(url, imageView1)
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength) {
-
+                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
+                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
                     }
                 })
                 .loaderListener(new LoaderListener() {
                     @Override
                     public void loader(boolean isLoader) {
-
+                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
                     }
                 })
-
                 .scaleType(ImageView.ScaleType.FIT_CENTER)
                 .build();
 
         ImageUtil.with(this)
                 .url(url, imageView2)
+                .progressListener(new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength) {
+                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
+                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                    }
+                })
+                .loaderListener(new LoaderListener() {
+                    @Override
+                    public void loader(boolean isLoader) {
+                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
+                    }
+                })
                 .scaleType(ImageView.ScaleType.FIT_XY)
                 .build();
 
         ImageUtil.with(this)
                 .url(url, imageView3)
+                .progressListener(new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength) {
+                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
+                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                    }
+                })
+                .loaderListener(new LoaderListener() {
+                    @Override
+                    public void loader(boolean isLoader) {
+                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
+                    }
+                })
                 .scaleType(ImageView.ScaleType.CENTER)
                 .build();
 
         ImageUtil.with(this)
                 .url(url, imageView4)
+                .progressListener(new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength) {
+                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
+                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                    }
+                })
+                .loaderListener(new LoaderListener() {
+                    @Override
+                    public void loader(boolean isLoader) {
+                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
+                    }
+                })
                 .scaleType(ImageView.ScaleType.FIT_END)
                 .build();
 
         ImageUtil.with(this)
                 .url(url, imageView5)
+                .progressListener(new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength) {
+                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
+                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                    }
+                })
+                .loaderListener(new LoaderListener() {
+                    @Override
+                    public void loader(boolean isLoader) {
+                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
+                    }
+                })
                 .scaleType(ImageView.ScaleType.MATRIX)
                 .build();
 
         ImageUtil.with(this)
                 .url(url, imageView6)
+                .progressListener(new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength) {
+                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
+                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                    }
+                })
+                .loaderListener(new LoaderListener() {
+                    @Override
+                    public void loader(boolean isLoader) {
+                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
+                    }
+                })
                 .scaleType(ImageView.ScaleType.FIT_CENTER)
                 .build();
 
         ImageUtil.with(this)
-                .url(url, imageView7)
+                .url(url + "fasdfasdfasdfasdf", imageView7)
+                .progressListener(new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength) {
+                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
+                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                    }
+                })
+                .loaderListener(new LoaderListener() {
+                    @Override
+                    public void loader(boolean isLoader) {
+                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
+                    }
+                })
                 .scaleType(ImageView.ScaleType.FIT_START)
                 .build();
     }

@@ -20,10 +20,14 @@ import com.imageutil.listener.LoaderListener;
 import com.imageutil.listener.ProgressListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by clickapps on 19/1/18.
@@ -192,6 +196,17 @@ public class RequestBuilder {
             if (!param.header.isEmpty()) {
                 okHttpClient = glideUtil.addHeader(param.header);
             }
+            okHttpClient = okHttpClient.newBuilder()
+                    .addInterceptor(new Interceptor() {
+                        @Override
+                        public Response intercept(Chain chain) throws IOException {
+                            Request request = chain.request();
+                            Response response = chain.proceed(request);
+                            return response.newBuilder()
+                                    .body(new GlideUtil.ProgressResponseBody(response.body(), param))
+                                    .build();
+                        }
+                    }).build();
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
             Glide.get(param.context).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;

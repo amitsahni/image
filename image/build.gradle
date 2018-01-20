@@ -8,7 +8,7 @@ android {
     buildToolsVersion "27.0.2"
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 24
     }
     buildTypes {
         debug {
@@ -30,6 +30,7 @@ dependencies {
     compile deps.okhttp3
     compile deps.logging
     annotationProcessor deps.glideCompiler
+    compile 'net.jcip:jcip-annotations:1.0'
 }
 
 // build a jar with source files

@@ -9,6 +9,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import net.jcip.annotations.ThreadSafe;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -32,17 +34,18 @@ import okio.Source;
  * The type Glide util.
  */
 public class GlideUtil {
-    private OkHttpClient okHttpClient = new OkHttpClient();
+    private OkHttpClient okHttpClient;
     private Dispatcher dispatcher = new Dispatcher();
     private HttpLoggingInterceptor mInterceptor = new HttpLoggingInterceptor();
     public static boolean LOG_ENABLED = false;
-    private static GlideUtil sGlideUtil;
+    private static volatile GlideUtil sGlideUtil;
 
     /**
      * Get web connect.
      *
      * @return the web connect
      */
+
     static GlideUtil get() {
         if (sGlideUtil == null) {
             synchronized (GlideUtil.class) {
@@ -67,22 +70,12 @@ public class GlideUtil {
             interceptor.setLevel(ImageConfiguration.sIS_DEBUG ?
                     HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
             builder.addInterceptor(interceptor);
-            builder.addNetworkInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    Request request = chain.request();
-                    Response response = chain.proceed(request);
-                    return response.newBuilder()
-                            .body(new ProgressResponseBody(response.body(), imageParam))
-                            .build();
-                }
-            });
             okHttpClient = builder.build();
         }
         return okHttpClient;
     }
 
-    public class ProgressResponseBody extends ResponseBody {
+    public static class ProgressResponseBody extends ResponseBody {
 
         private final ResponseBody responseBody;
         private final ImageParam imageParam;
@@ -164,7 +157,7 @@ public class GlideUtil {
         @Override
         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
             if (imageParam.loaderListener != null) {
-                imageParam.loaderListener.loader(true);
+                imageParam.loaderListener.loader(false);
             }
             return false;
         }
