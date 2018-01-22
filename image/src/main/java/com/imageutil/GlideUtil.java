@@ -7,15 +7,11 @@ import android.util.Log;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import net.jcip.annotations.ThreadSafe;
-
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -26,8 +22,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.internal.cache.CacheInterceptor;
-import okhttp3.internal.http.CallServerInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
 import okio.BufferedSource;
@@ -63,6 +57,7 @@ public class GlideUtil {
         return sGlideUtil;
     }
 
+    /*************************************/
     OkHttpClient getDefaultOkHttpClient(@NonNull final ImageParam imageParam) {
         if (okHttpClient == null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -91,6 +86,15 @@ public class GlideUtil {
         return okHttpClient;
     }
 
+    LazyHeaders addHeader(@NonNull final Map<String, String> header) {
+        LazyHeaders.Builder builder = new LazyHeaders.Builder();
+        for (Map.Entry<String, String> entry : header.entrySet()) {
+            builder.addHeader(entry.getKey(), entry.getValue());
+        }
+        return builder.build();
+    }
+
+    /*************************************/
     public class ProgressResponseBody extends ResponseBody {
 
         private final ResponseBody responseBody;
@@ -144,14 +148,6 @@ public class GlideUtil {
                 }
             };
         }
-    }
-
-    LazyHeaders addHeader(@NonNull final Map<String, String> header) {
-        LazyHeaders.Builder builder = new LazyHeaders.Builder();
-        for (Map.Entry<String, String> entry : header.entrySet()) {
-            builder.addHeader(entry.getKey(), entry.getValue());
-        }
-        return builder.build();
     }
 
     static class GlideRequestListener implements RequestListener<Bitmap> {
