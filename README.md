@@ -117,6 +117,6 @@ Add the JitPack repository to your root build.gradle:
 Add the Gradle dependency:
 ```groovy
 	dependencies {
-		compile 'com.github.amitsahni:image:1.0.0'
+		compile 'com.github.amitsahni:image:1.0.1'
 	}
 ```
