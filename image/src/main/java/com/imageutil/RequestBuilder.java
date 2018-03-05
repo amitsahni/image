@@ -33,7 +33,7 @@ public class RequestBuilder {
 
 
     @SuppressWarnings("CheckResult")
-    public static class GalleryBuilder<T extends GalleryBuilder> implements ImageProperty<T> {
+    public static class GalleryBuilder implements ImageProperty<GalleryBuilder> {
         ImageParam param;
 
         public GalleryBuilder(ImageParam param) {
@@ -41,253 +41,253 @@ public class RequestBuilder {
         }
 
         @Override
-        public T thumbnail(int loadingThumb, int errorThumb) {
-            param.loadingThumbnail = loadingThumb;
-            param.errorThumbnail = errorThumb;
-            return (T) this;
+        public GalleryBuilder thumbnail(int loadingThumb, int errorThumb) {
+            param.setLoadingThumbnail(loadingThumb);
+            param.setErrorThumbnail(errorThumb);
+            return  this;
         }
 
         @Override
-        public T resize(int height, int width) {
-            param.height = height;
-            param.width = width;
-            return (T) this;
+        public GalleryBuilder resize(int height, int width) {
+            param.setHeight(height);
+            param.setWidth(width);
+            return  this;
         }
 
         @Override
-        public T cache(boolean isCache) {
-            param.disableCache = isCache;
-            return (T) this;
+        public GalleryBuilder cache(boolean isCache) {
+            param.setDisableCache(isCache);
+            return  this;
         }
 
         @Override
-        public T tasKId(int taskId) {
-            param.taskId = taskId;
-            return (T) this;
+        public GalleryBuilder tasKId(int taskId) {
+            param.setTaskId(taskId);
+            return  this;
         }
 
         @Override
-        public T transform(Transformation<Bitmap> transformations) {
-            param.transformation = transformations;
-            return (T) this;
+        public GalleryBuilder transform(Transformation<Bitmap> transformations) {
+            param.setTransformation(transformations);
+            return  this;
         }
 
         @Override
-        public T progressListener(@NonNull ProgressListener listener) {
-            param.progressListener = listener;
-            return (T) this;
+        public GalleryBuilder progressListener(@NonNull ProgressListener listener) {
+            param.setProgressListener(listener);
+            return  this;
         }
 
         @Override
-        public T loaderListener(@NonNull LoaderListener listener) {
-            param.loaderListener = listener;
-            return (T) this;
+        public GalleryBuilder loaderListener(@NonNull LoaderListener listener) {
+            param.setLoaderListener(listener);
+            return  this;
         }
 
-        public T scaleType(@NonNull ImageView.ScaleType scaleType) {
-            param.scaleType = scaleType;
-            return (T) this;
+        public GalleryBuilder scaleType(@NonNull ImageView.ScaleType scaleType) {
+            param.setScaleType(scaleType);
+            return  this;
         }
 
         public void build() {
-            if (param.context == null) return;
+            if (param.getContext() == null) return;
             GlideUtil glideUtil = GlideUtil.get();
             OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
-            Glide.get(param.context).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
             RequestOptions options = new RequestOptions();
-            RequestManager manager = Glide.with(param.context);
-            requestBuilder = manager.asBitmap().load(Uri.parse(param.url));
-            if (param.loadingThumbnail != -1) {
-                options.placeholder(param.loadingThumbnail);
+            RequestManager manager = Glide.with(param.getContext());
+            requestBuilder = manager.asBitmap().load(Uri.parse(param.getUrl()));
+            if (param.getLoadingThumbnail() != -1) {
+                options.placeholder(param.getLoadingThumbnail());
             } else {
-                options.placeholder(ContextCompat.getDrawable(param.context, android.R.color.holo_red_dark));
+                options.placeholder(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
             }
-            if (param.errorThumbnail != -1) {
-                options.error(param.errorThumbnail);
+            if (param.getErrorThumbnail() != -1) {
+                options.error(param.getErrorThumbnail());
             } else {
-                options.error(ContextCompat.getDrawable(param.context, android.R.color.holo_red_dark));
+                options.error(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
             }
-            if (param.disableCache) {
+            if (param.getDisableCache()) {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
             }
-            if (param.height > 0 && param.width > 0) {
-                options.override(param.width, param.height);
+            if (param.getHeight() > 0 && param.getWidth() > 0) {
+                options.override(param.getWidth(), param.getHeight());
             }
-            if (param.transformation != null) {
-                options.transform(param.transformation);
+            if (param.getTransformation() != null) {
+                options.transform(param.getTransformation());
             }
-            if (param.scaleType != null) {
-                param.imageView.setScaleType(param.scaleType);
+            if (param.getScaleType() != null) {
+                param.getImageView().setScaleType(param.getScaleType());
             }
             requestBuilder.apply(options);
             requestBuilder.listener(new GlideUtil.GlideRequestListener(param));
-            requestBuilder.into(param.imageView);
+            requestBuilder.into(param.getImageView());
         }
     }
 
-    public static class FileBuilder extends GalleryBuilder<FileBuilder> {
+    public static class FileBuilder extends GalleryBuilder {
 
         public FileBuilder(ImageParam param) {
             super(param);
         }
 
         public void build() {
-            if (param.context == null) return;
+            if (param.getContext() == null) return;
             GlideUtil glideUtil = GlideUtil.get();
             OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
-            Glide.get(param.context).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
             RequestOptions options = new RequestOptions();
-            RequestManager manager = Glide.with(param.context);
-            requestBuilder = manager.asBitmap().load(new File(param.url));
-            if (param.loadingThumbnail != -1) {
-                options.placeholder(param.loadingThumbnail);
+            RequestManager manager = Glide.with(param.getContext());
+            requestBuilder = manager.asBitmap().load(new File(param.getUrl()));
+            if (param.getLoadingThumbnail() != -1) {
+                options.placeholder(param.getLoadingThumbnail());
             } else {
-                options.placeholder(ContextCompat.getDrawable(param.context, android.R.color.holo_red_dark));
+                options.placeholder(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
             }
-            if (param.errorThumbnail != -1) {
-                options.error(param.errorThumbnail);
+            if (param.getErrorThumbnail() != -1) {
+                options.error(param.getErrorThumbnail());
             } else {
-                options.error(ContextCompat.getDrawable(param.context, android.R.color.holo_red_dark));
+                options.error(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
             }
-            if (param.disableCache) {
+            if (param.getDisableCache()) {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
             }
-            if (param.height > 0 && param.width > 0) {
-                options.override(param.width, param.height);
+            if (param.getHeight() > 0 && param.getWidth() > 0) {
+                options.override(param.getWidth(), param.getHeight());
             }
-            if (param.transformation != null) {
-                options.transform(param.transformation);
+            if (param.getTransformation() != null) {
+                options.transform(param.getTransformation());
             }
-            if (param.scaleType != null) {
-                param.imageView.setScaleType(param.scaleType);
+            if (param.getScaleType() != null) {
+                param.getImageView().setScaleType(param.getScaleType());
             }
             requestBuilder.apply(options);
             requestBuilder.listener(new GlideUtil.GlideRequestListener(param));
-            requestBuilder.into(param.imageView);
+            requestBuilder.into(param.getImageView());
         }
     }
 
-    public static class UrlBuilder extends GalleryBuilder<UrlBuilder> {
+    public static class UrlBuilder extends GalleryBuilder {
 
         public UrlBuilder(ImageParam param) {
             super(param);
         }
 
         public UrlBuilder header(@NonNull Map<String, String> headers) {
-            param.header = headers;
+            param.setHeader(headers);
             return this;
         }
 
         public void build() {
-            if (param.context == null) return;
+            if (param.getContext() == null) return;
             GlideUtil glideUtil = GlideUtil.get();
             OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
             GlideUrl glideUrl;
-            if (!param.header.isEmpty()) {
-                glideUrl = new GlideUrl(param.url, glideUtil.addHeader(param.header));
+            if (!param.getHeader().isEmpty()) {
+                glideUrl = new GlideUrl(param.getUrl(), glideUtil.addHeader(param.getHeader()));
             } else {
-                glideUrl = new GlideUrl(param.url);
+                glideUrl = new GlideUrl(param.getUrl());
             }
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
-            Glide.get(param.context).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
             RequestOptions options = new RequestOptions();
-            RequestManager manager = Glide.with(param.context);
+            RequestManager manager = Glide.with(param.getContext());
             requestBuilder = manager.asBitmap().load(glideUrl);
-            if (param.loadingThumbnail != -1) {
-                options.placeholder(param.loadingThumbnail);
+            if (param.getLoadingThumbnail() != -1) {
+                options.placeholder(param.getLoadingThumbnail());
             } else {
-                options.placeholder(ContextCompat.getDrawable(param.context, android.R.color.holo_red_dark));
+                options.placeholder(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
             }
-            if (param.errorThumbnail != -1) {
-                options.error(param.errorThumbnail);
+            if (param.getErrorThumbnail() != -1) {
+                options.error(param.getErrorThumbnail());
             } else {
-                options.error(ContextCompat.getDrawable(param.context, android.R.color.holo_red_dark));
+                options.error(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
             }
-            if (param.disableCache) {
+            if (param.getDisableCache()) {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
             }
-            if (param.height > 0 && param.width > 0) {
-                options.override(param.width, param.height);
+            if (param.getHeight() > 0 && param.getWidth() > 0) {
+                options.override(param.getWidth(), param.getHeight());
             }
-            if (param.transformation != null) {
-                options.transform(param.transformation);
+            if (param.getTransformation() != null) {
+                options.transform(param.getTransformation());
             }
-            if (param.scaleType != null) {
-                param.imageView.setScaleType(param.scaleType);
+            if (param.getScaleType() != null) {
+                param.getImageView().setScaleType(param.getScaleType());
             }
             requestBuilder.apply(options);
             requestBuilder.listener(new GlideUtil.GlideRequestListener(param));
-            requestBuilder.into(param.imageView);
+            requestBuilder.into(param.getImageView());
         }
     }
 
-    public static class DownloadBuilder extends GalleryBuilder<DownloadBuilder> {
+    public static class DownloadBuilder extends GalleryBuilder {
 
         public DownloadBuilder(ImageParam param) {
             super(param);
         }
 
         public DownloadBuilder downloadListener(@NonNull DownloadListener listener) {
-            param.downloadListener = listener;
+            param.setDownloadListener(listener);
             return this;
         }
 
         public DownloadBuilder header(@NonNull Map<String, String> headers) {
-            param.header = headers;
+            param.setHeader(headers);
             return this;
         }
 
         public void build() {
-            if (param.context == null) return;
+            if (param.getContext() == null) return;
             GlideUtil glideUtil = GlideUtil.get();
             OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
             GlideUrl glideUrl;
-            if (!param.header.isEmpty()) {
-                glideUrl = new GlideUrl(param.url, glideUtil.addHeader(param.header));
+            if (!param.getHeader().isEmpty()) {
+                glideUrl = new GlideUrl(param.getUrl(), glideUtil.addHeader(param.getHeader()));
             } else {
-                glideUrl = new GlideUrl(param.url);
+                glideUrl = new GlideUrl(param.getUrl());
             }
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
-            Glide.get(param.context).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
             RequestOptions options = new RequestOptions();
-            RequestManager manager = Glide.with(param.context);
+            RequestManager manager = Glide.with(param.getContext());
             requestBuilder = manager.asBitmap().load(glideUrl);
-            if (param.loadingThumbnail != -1) {
-                options.placeholder(param.loadingThumbnail);
+            if (param.getLoadingThumbnail() != -1) {
+                options.placeholder(param.getLoadingThumbnail());
             } else {
-                options.placeholder(ContextCompat.getDrawable(param.context, android.R.color.holo_red_dark));
+                options.placeholder(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
             }
-            if (param.errorThumbnail != -1) {
-                options.error(param.errorThumbnail);
+            if (param.getErrorThumbnail() != -1) {
+                options.error(param.getErrorThumbnail());
             } else {
-                options.error(ContextCompat.getDrawable(param.context, android.R.color.holo_red_dark));
+                options.error(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
             }
-            if (param.disableCache) {
+            if (param.getDisableCache()) {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
             }
-            if (param.height > 0 && param.width > 0) {
-                options.override(param.width, param.height);
+            if (param.getHeight() > 0 && param.getWidth() > 0) {
+                options.override(param.getWidth(), param.getHeight());
             }
-            if (param.transformation != null) {
-                options.transform(param.transformation);
+            if (param.getTransformation() != null) {
+                options.transform(param.getTransformation());
             }
             requestBuilder.apply(options);
             requestBuilder.listener(new GlideUtil.GlideRequestListener(param));
             requestBuilder.into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                    if (param.downloadListener != null) {
-                        param.downloadListener.download(resource, param.taskId);
+                    if (param.getDownloadListener() != null) {
+                        param.getDownloadListener().download(resource, param.getTaskId());
                     }
                 }
             });

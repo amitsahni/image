@@ -142,8 +142,8 @@ public class GlideUtil {
                             Log.e(getClass().getSimpleName(), "Exception = " + e.getMessage());
                         }
                     }
-                    if (imageParam.progressListener != null)
-                        imageParam.progressListener.update(totalBytesRead, length, progress);
+                    if (imageParam.getProgressListener() != null)
+                        imageParam.getProgressListener().update(totalBytesRead, length, progress);
                     return bytesRead;
                 }
             };
@@ -155,23 +155,23 @@ public class GlideUtil {
 
         GlideRequestListener(ImageParam imageParam) {
             this.imageParam = imageParam;
-            if (imageParam.loaderListener != null) {
-                imageParam.loaderListener.loader(true);
+            if (imageParam.getLoaderListener() != null) {
+                imageParam.getLoaderListener().loader(true);
             }
         }
 
         @Override
         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-            if (imageParam.loaderListener != null) {
-                imageParam.loaderListener.loader(false);
+            if (imageParam.getLoaderListener() != null) {
+                imageParam.getLoaderListener().loader(false);
             }
             return false;
         }
 
         @Override
         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-            if (imageParam.loaderListener != null) {
-                imageParam.loaderListener.loader(false);
+            if (imageParam.getLoaderListener() != null) {
+                imageParam.getLoaderListener().loader(false);
             }
             return false;
         }

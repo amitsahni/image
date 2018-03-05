@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.amitsahni'
 version = '1.0.0'
@@ -25,12 +26,13 @@ repositories {
     mavenCentral() // jcenter() works as well because it pulls from Maven Central
 }
 dependencies {
-    compile deps.appcomat
+    implementation deps.appcomat
     compile deps.glide
-    compile deps.okhttp3
-    compile deps.logging
+    implementation deps.okhttp3
+    implementation deps.logging
     annotationProcessor deps.glideCompiler
-    compile 'net.jcip:jcip-annotations:1.0'
+    //implementation 'net.jcip:jcip-annotations:1.0'
+    implementation deps.kotlin
 }
 
 // build a jar with source files
