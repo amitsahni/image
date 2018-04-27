@@ -27,7 +27,7 @@ repositories {
 }
 dependencies {
     implementation deps.appcomat
-    compile deps.glide
+    implementation deps.glide
     implementation deps.okhttp3
     implementation deps.logging
     annotationProcessor deps.glideCompiler

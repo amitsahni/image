@@ -1,10 +1,14 @@
 package test.image;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.imageutil.ImageConfiguration;
@@ -45,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Pair<View, String> pair = Pair.create(v, v.getTransitionName());
+                ActivityOptionsCompat option = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, pair);
+                startActivity(new Intent(MainActivity.this, SecondActivity.class), option.toBundle());
+            }
+        });
         new ImageConfiguration.Builder()
                 .isDebug(true)
                 .config();
