@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView6;
     @BindView(R.id.imageView7)
     ImageView imageView7;
-    private final String url = "http://res.cloudinary.com/clickapps/image/upload/v1504245457/test/1024x1024-Wallpapers-010.jpg";
+//    private final String url = "http://res.cloudinary.com/clickapps/image/upload/v1504245457/test/1024x1024-Wallpapers-010.jpg";
+    private final String url = "";
+
 
 
     @Override
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).build();
         ImageUtil.with(this)
-                .url(url + "fasdfasdfasdfasdf", imageView1)
+                .url("", imageView1)
                 .tasKId(2)
                 .progressListener(new ProgressListener() {
                     @Override
