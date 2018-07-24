@@ -1,11 +1,11 @@
 package com.imageutil;
 
-import android.support.annotation.NonNull;
+import com.imageutil.di.component.DaggerImageComponent;
+import com.imageutil.di.component.ImageComponent;
 
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Cache;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 
@@ -36,6 +36,8 @@ public class ImageConfiguration implements Serializable {
     public static OkHttpClient getOkHttpClient() {
         return okHttpClient;
     }
+
+    public static ImageComponent imageComponent;
 
     public static class Builder {
         private long connectTimeOut = 10 * 1000L;
@@ -73,6 +75,13 @@ public class ImageConfiguration implements Serializable {
                     .dispatcher(dispatcher)
                     .addInterceptor(interceptor)
                     .build();
+
+            ImageComponent imageComponent = DaggerImageComponent
+                    .builder()
+                    .build();
+
+            // imageComponent.inject(ImageConfiguration.this);
+
         }
 
     }
