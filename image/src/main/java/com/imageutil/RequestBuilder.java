@@ -56,9 +56,19 @@ public class RequestBuilder {
             return this;
         }
 
+        /**
+         * Instead {@link #disableCache()}
+         */
+        @Deprecated
         @Override
         public GalleryBuilder cache(boolean isCache) {
             param.setDisableCache(isCache);
+            return this;
+        }
+
+        @Override
+        public GalleryBuilder disableCache() {
+            param.setDisableCache(true);
             return this;
         }
 

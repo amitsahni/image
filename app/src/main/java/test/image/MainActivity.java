@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 .file(file, imageView1)
                 .tasKId(2)
                 .cache(true)
+                .disableCache()
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {

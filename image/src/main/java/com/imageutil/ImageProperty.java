@@ -7,8 +7,6 @@ import com.bumptech.glide.load.Transformation;
 import com.imageutil.listener.LoaderListener;
 import com.imageutil.listener.ProgressListener;
 
-import java.util.Map;
-
 /**
  * Created by clickapps on 19/1/18.
  */
@@ -19,7 +17,10 @@ public interface ImageProperty<T> {
 
     T resize(int height, int width);
 
+    @Deprecated
     T cache(boolean isCache);
+
+    T disableCache();
 
     T tasKId(int taskId);
 
