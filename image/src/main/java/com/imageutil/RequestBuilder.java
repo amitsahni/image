@@ -20,6 +20,8 @@ import com.imageutil.listener.LoaderListener;
 import com.imageutil.listener.ProgressListener;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -44,49 +46,49 @@ public class RequestBuilder {
         public GalleryBuilder thumbnail(int loadingThumb, int errorThumb) {
             param.setLoadingThumbnail(loadingThumb);
             param.setErrorThumbnail(errorThumb);
-            return  this;
+            return this;
         }
 
         @Override
         public GalleryBuilder resize(int height, int width) {
             param.setHeight(height);
             param.setWidth(width);
-            return  this;
+            return this;
         }
 
         @Override
         public GalleryBuilder cache(boolean isCache) {
             param.setDisableCache(isCache);
-            return  this;
+            return this;
         }
 
         @Override
         public GalleryBuilder tasKId(int taskId) {
             param.setTaskId(taskId);
-            return  this;
+            return this;
         }
 
         @Override
         public GalleryBuilder transform(Transformation<Bitmap> transformations) {
             param.setTransformation(transformations);
-            return  this;
+            return this;
         }
 
         @Override
         public GalleryBuilder progressListener(@NonNull ProgressListener listener) {
             param.setProgressListener(listener);
-            return  this;
+            return this;
         }
 
         @Override
         public GalleryBuilder loaderListener(@NonNull LoaderListener listener) {
             param.setLoaderListener(listener);
-            return  this;
+            return this;
         }
 
         public GalleryBuilder scaleType(@NonNull ImageView.ScaleType scaleType) {
             param.setScaleType(scaleType);
-            return  this;
+            return this;
         }
 
         public void build() {
@@ -112,6 +114,7 @@ public class RequestBuilder {
             if (param.getDisableCache()) {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
+                options.signature(new CacheKey(1));
             }
             if (param.getHeight() > 0 && param.getWidth() > 0) {
                 options.override(param.getWidth(), param.getHeight());
@@ -213,7 +216,9 @@ public class RequestBuilder {
             if (param.getDisableCache()) {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
+                options.signature(new CacheKey(1));
             }
+
             if (param.getHeight() > 0 && param.getWidth() > 0) {
                 options.override(param.getWidth(), param.getHeight());
             }
@@ -229,7 +234,7 @@ public class RequestBuilder {
         }
     }
 
-    public static class DownloadBuilder extends GalleryBuilder {
+    public static class DownloadBuilder extends UrlBuilder {
 
         public DownloadBuilder(ImageParam param) {
             super(param);
@@ -240,8 +245,8 @@ public class RequestBuilder {
             return this;
         }
 
-        public DownloadBuilder header(@NonNull Map<String, String> headers) {
-            param.setHeader(headers);
+        public DownloadBuilder saveTo(@NonNull File file) {
+            param.setFile(file);
             return this;
         }
 
@@ -274,6 +279,7 @@ public class RequestBuilder {
             if (param.getDisableCache()) {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
+                options.signature(new CacheKey(1));
             }
             if (param.getHeight() > 0 && param.getWidth() > 0) {
                 options.override(param.getWidth(), param.getHeight());
@@ -288,6 +294,23 @@ public class RequestBuilder {
                 public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                     if (param.getDownloadListener() != null) {
                         param.getDownloadListener().download(resource, param.getTaskId());
+                        if (param.getFile() != null) {
+                            FileOutputStream out = null;
+                            try {
+                                out = new FileOutputStream(param.getFile());
+                                resource.compress(Bitmap.CompressFormat.PNG, 100, out);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                try {
+                                    if (out != null) {
+                                        out.close();
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
                     }
                 }
             });

@@ -91,6 +91,7 @@ ImageUtil.with(this)
 ImageUtil.with(this)
                 .download(url)
                 .taskId(1)
+                .saveTo(file)
                 .downloadListener(new DownloadListener() {
                     @Override
                     public void download(Bitmap bitmap, int taskId) {
@@ -117,6 +118,6 @@ Add the JitPack repository to your root build.gradle:
 Add the Gradle dependency:
 ```groovy
 	dependencies {
-		compile 'com.github.amitsahni:image:1.0.1'
+		compile 'com.github.amitsahni:image:1.0.3'
 	}
 ```

@@ -3,6 +3,7 @@ package test.image;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -16,6 +17,8 @@ import com.imageutil.ImageUtil;
 import com.imageutil.listener.DownloadListener;
 import com.imageutil.listener.LoaderListener;
 import com.imageutil.listener.ProgressListener;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,9 +44,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView6;
     @BindView(R.id.imageView7)
     ImageView imageView7;
-//    private final String url = "http://res.cloudinary.com/clickapps/image/upload/v1504245457/test/1024x1024-Wallpapers-010.jpg";
-    private final String url = "";
-
+    private final String url = "http://res.cloudinary.com/clickapps/image/upload/v1504245457/test/1024x1024-Wallpapers-010.jpg";
+//    private final String url = "";
 
 
     @Override
@@ -62,8 +64,10 @@ public class MainActivity extends AppCompatActivity {
         new ImageConfiguration.Builder()
                 .isDebug(true)
                 .config();
+        File file = new File(Environment.getExternalStorageDirectory(), "temp2.jpg");
         ImageUtil.with(this)
                 .download(url)
+                .saveTo(file)
                 .downloadListener(new DownloadListener() {
                     @Override
                     public void download(Bitmap bitmap, int taskId) {
@@ -86,9 +90,11 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(getLocalClassName(), "isLoader = " + isLoader);
                     }
                 }).build();
+        file = new File(Environment.getExternalStorageDirectory(), "temp.jpg");
         ImageUtil.with(this)
-                .url("", imageView1)
+                .file(file, imageView1)
                 .tasKId(2)
+                .cache(true)
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {
