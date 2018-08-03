@@ -73,6 +73,12 @@ public class RequestBuilder {
         }
 
         @Override
+        public GalleryBuilder forceLatestDownload() {
+            param.setLatestOnly(true);
+            return this;
+        }
+
+        @Override
         public GalleryBuilder tasKId(int taskId) {
             param.setTaskId(taskId);
             return this;
@@ -101,6 +107,23 @@ public class RequestBuilder {
             return this;
         }
 
+        /**
+         * @param compressedFile
+         * @param compressPercentage (0.1f~1.0f)
+         * @return
+         */
+        public GalleryBuilder compress(@NonNull File compressedFile, float compressPercentage) {
+            param.setFile(compressedFile);
+            param.setCompressedPercentage(compressPercentage);
+            return this;
+        }
+
+        public GalleryBuilder compress(@NonNull File compressedFile) {
+            param.setFile(compressedFile);
+            param.setCompressedPercentage(-1);
+            return this;
+        }
+
         public void build() {
             if (param.getContext() == null) return;
             GlideUtil glideUtil = GlideUtil.get();
@@ -124,7 +147,9 @@ public class RequestBuilder {
             if (param.getDisableCache()) {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
-                options.signature(new CacheKey(1));
+            }
+            if (param.getLatestOnly()) {
+                options.signature(new CacheKey(1, param.getUrl()));
             }
             if (param.getHeight() > 0 && param.getWidth() > 0) {
                 options.override(param.getWidth(), param.getHeight());
@@ -171,6 +196,9 @@ public class RequestBuilder {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
             }
+            if (param.getLatestOnly()) {
+                options.signature(new GlideUrl(param.getUrl()));
+            }
             if (param.getHeight() > 0 && param.getWidth() > 0) {
                 options.override(param.getWidth(), param.getHeight());
             }
@@ -208,10 +236,10 @@ public class RequestBuilder {
                 glideUrl = new GlideUrl(param.getUrl());
             }
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
-            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+            GlideApp.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
             RequestOptions options = new RequestOptions();
-            RequestManager manager = Glide.with(param.getContext());
+            RequestManager manager = GlideApp.with(param.getContext());
             requestBuilder = manager.asBitmap().load(glideUrl);
             if (param.getLoadingThumbnail() != -1) {
                 options.placeholder(param.getLoadingThumbnail());
@@ -226,9 +254,10 @@ public class RequestBuilder {
             if (param.getDisableCache()) {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
-                options.signature(new CacheKey(1));
             }
-
+            if (param.getLatestOnly()) {
+                options.signature(new CacheKey(1, param.getUrl()));
+            }
             if (param.getHeight() > 0 && param.getWidth() > 0) {
                 options.override(param.getWidth(), param.getHeight());
             }
@@ -289,7 +318,6 @@ public class RequestBuilder {
             if (param.getDisableCache()) {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
-                options.signature(new CacheKey(1));
             }
             if (param.getHeight() > 0 && param.getWidth() > 0) {
                 options.override(param.getWidth(), param.getHeight());

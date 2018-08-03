@@ -22,6 +22,8 @@ public interface ImageProperty<T> {
 
     T disableCache();
 
+    T forceLatestDownload();
+
     T tasKId(int taskId);
 
     T transform(Transformation<Bitmap> transformations);

@@ -20,7 +20,6 @@ class ImageParam {
     var loaderListener: LoaderListener? = null
     var downloadListener: DownloadListener? = null
     var url: String? = null
-    var disableCacheKey: String? = null
 
     var imageType = ImageType.URL
 
@@ -31,7 +30,7 @@ class ImageParam {
     var width: Int = 0
 
     var disableCache = false
-    var clearCache = false
+    var latestOnly = false
 
     var header: Map<String, String> = LinkedHashMap()
 
@@ -44,6 +43,8 @@ class ImageParam {
     var transformation: Transformation<Bitmap>? = null
 
     var file: File? = null
+
+    var compressedPercentage = -1f
 
     enum class ImageType {
         URL,

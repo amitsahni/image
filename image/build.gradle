@@ -33,6 +33,7 @@ dependencies {
     annotationProcessor deps.glideCompiler
     //implementation 'net.jcip:jcip-annotations:1.0'
     implementation deps.kotlin
+    implementation 'id.zelory:compressor:2.1.0'
 }
 
 // build a jar with source files

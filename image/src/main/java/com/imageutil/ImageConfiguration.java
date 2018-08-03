@@ -1,13 +1,11 @@
 package com.imageutil;
 
-import android.support.annotation.NonNull;
-
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Cache;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by amit on 9/9/17.
@@ -65,7 +63,8 @@ public class ImageConfiguration implements Serializable {
             okhttp3.logging.HttpLoggingInterceptor interceptor = new okhttp3.logging.HttpLoggingInterceptor();
             interceptor.setLevel(isDebug ?
                     okhttp3.logging.HttpLoggingInterceptor.Level.BODY : okhttp3.logging.HttpLoggingInterceptor.Level.NONE);
-            okHttpClient = okHttpClient
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            okHttpClient
                     .newBuilder()
                     .connectTimeout(connectTimeOut, TimeUnit.SECONDS)
                     .readTimeout(readTimeOut, TimeUnit.SECONDS)

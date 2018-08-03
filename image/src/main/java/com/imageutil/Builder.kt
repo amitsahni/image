@@ -30,7 +30,7 @@ class Builder(context: Context) {
     }
 
     fun file(file: File?, imageView: ImageView?): RequestBuilder.FileBuilder {
-        param.imageType = ImageParam.ImageType.URI
+        param.imageType = ImageParam.ImageType.FILE
         param.url = file.toString()
         if (TextUtils.isEmpty(file.toString())) {
             param.url = "Not Valid File"

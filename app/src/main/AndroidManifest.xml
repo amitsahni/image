@@ -25,5 +25,4 @@
             android:label="@string/title_activity_second"
             android:theme="@style/AppTheme.ArcMotion"></activity>
     </application>
-
 </manifest>
