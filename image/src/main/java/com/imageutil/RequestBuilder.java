@@ -236,10 +236,10 @@ public class RequestBuilder {
                 glideUrl = new GlideUrl(param.getUrl());
             }
             OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
-            GlideApp.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
             RequestOptions options = new RequestOptions();
-            RequestManager manager = GlideApp.with(param.getContext());
+            RequestManager manager = Glide.with(param.getContext());
             requestBuilder = manager.asBitmap().load(glideUrl);
             if (param.getLoadingThumbnail() != -1) {
                 options.placeholder(param.getLoadingThumbnail());
