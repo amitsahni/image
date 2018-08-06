@@ -25,12 +25,14 @@ public class ImageGlideModule extends AppGlideModule {
     @Override
     public void registerComponents(@NonNull Context context, @NonNull Glide glide,
                                    @NonNull Registry registry) {
-        OkHttpClient okHttpClient = ImageConfiguration.getOkHttpClient();
-        registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(okHttpClient));
+//        OkHttpClient okHttpClient = ImageConfiguration.getOkHttpClient();
+//        glide.getRegistry().append(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(okHttpClient));
     }
 
     @Override
     public void applyOptions(@NonNull Context context, @NonNull GlideBuilder builder) {
-        builder.setLogLevel(Log.VERBOSE);
+        if (ImageConfiguration.isDebug()) {
+            builder.setLogLevel(Log.VERBOSE);
+        }
     }
 }
