@@ -61,41 +61,29 @@ public class GlideUtil {
 
     /*************************************/
     OkHttpClient getDefaultOkHttpClient(@NonNull final ImageParam imageParam) {
-//        if (okHttpClient == null) {
-//            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-//            builder.connectTimeout(ImageConfiguration.sCONNECT_TIME_OUT, TimeUnit.SECONDS);
-//            builder.writeTimeout(ImageConfiguration.sCONNECT_TIME_OUT, TimeUnit.SECONDS);
-//            builder.readTimeout(ImageConfiguration.sREAD_TIME_OUT, TimeUnit.SECONDS);
-//            dispatcher.setMaxRequestsPerHost(2);
-//            dispatcher.setMaxRequests(10);
-//            builder.dispatcher(dispatcher);
-//            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-//            interceptor.setLevel(ImageConfiguration.sIS_DEBUG ?
-//                    HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
-//            builder.addInterceptor(interceptor);
-//            builder.addNetworkInterceptor(new Interceptor() {
-//                @Override
-//                public Response intercept(Chain chain) throws IOException {
-//                    Request request = chain.request();
-//                    Response response = chain.proceed(request);
-//                    return response.newBuilder()
-//                            .body(new GlideUtil.ProgressResponseBody(response.body(), imageParam))
-//                            .build();
-//                }
-//            });
-//            okHttpClient = builder.build();
-//
-//        }
-        okHttpClient.newBuilder().addNetworkInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
-                Response response = chain.proceed(request);
-                return response.newBuilder()
-                        .body(new GlideUtil.ProgressResponseBody(response.body(), imageParam))
-                        .build();
-            }
-        }).build();
+        if (okHttpClient == null) {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.connectTimeout(ImageConfiguration.sCONNECT_TIME_OUT, TimeUnit.SECONDS);
+            builder.writeTimeout(ImageConfiguration.sCONNECT_TIME_OUT, TimeUnit.SECONDS);
+            builder.readTimeout(ImageConfiguration.sREAD_TIME_OUT, TimeUnit.SECONDS);
+            dispatcher.setMaxRequestsPerHost(2);
+            dispatcher.setMaxRequests(10);
+            builder.dispatcher(dispatcher);
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(ImageConfiguration.sIS_DEBUG ?
+                    HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+            builder.addInterceptor(interceptor);
+            builder.addNetworkInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request request = chain.request();
+                    Response response = chain.proceed(request);
+                    return response.newBuilder()
+                            .body(new GlideUtil.ProgressResponseBody(response.body(), imageParam))
+                            .build();
+                }
+            });
+        }
         return okHttpClient;
     }
 

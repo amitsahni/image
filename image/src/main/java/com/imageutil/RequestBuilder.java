@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by clickapps on 19/1/18.

@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         new ImageConfiguration.Builder()
                 .isDebug(true)
                 .config();
+
         File file = new File(Environment.getExternalStorageDirectory(), "temp2.jpg");
         ImageUtil.with(this)
                 .download(url)
