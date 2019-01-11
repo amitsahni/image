@@ -41,7 +41,7 @@ class Builder(context: Context) {
 
     fun url(url: String?, imageView: ImageView?): RequestBuilder.UrlBuilder {
         param.imageType = ImageParam.ImageType.URL
-        param.url = url
+        param.url = url!!
         if (TextUtils.isEmpty(url)) {
             param.url = "emptyUrl"
         }
@@ -51,7 +51,7 @@ class Builder(context: Context) {
 
     fun download(url: String?): RequestBuilder.DownloadBuilder {
         param.imageType = ImageParam.ImageType.DOWNLOAD
-        param.url = url
+        param.url = url!!
         if (TextUtils.isEmpty(url)) {
             param.url = "empty download Url"
         }

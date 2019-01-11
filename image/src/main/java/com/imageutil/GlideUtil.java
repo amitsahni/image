@@ -11,12 +11,11 @@ import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import id.zelory.compressor.Compressor;
 import okhttp3.Dispatcher;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -36,10 +35,6 @@ import okio.Source;
  * The type Glide util.
  */
 public class GlideUtil {
-    private OkHttpClient okHttpClient = ImageConfiguration.getOkHttpClient();
-    private Dispatcher dispatcher = new Dispatcher();
-    private HttpLoggingInterceptor mInterceptor = new HttpLoggingInterceptor();
-    public static boolean LOG_ENABLED = false;
     private static volatile GlideUtil sGlideUtil;
 
     /**
@@ -61,11 +56,13 @@ public class GlideUtil {
 
     /*************************************/
     OkHttpClient getDefaultOkHttpClient(@NonNull final ImageParam imageParam) {
+        OkHttpClient okHttpClient = ImageConfiguration.getOkHttpClient();
         if (okHttpClient == null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.connectTimeout(ImageConfiguration.sCONNECT_TIME_OUT, TimeUnit.SECONDS);
             builder.writeTimeout(ImageConfiguration.sCONNECT_TIME_OUT, TimeUnit.SECONDS);
             builder.readTimeout(ImageConfiguration.sREAD_TIME_OUT, TimeUnit.SECONDS);
+            Dispatcher dispatcher = new Dispatcher();
             dispatcher.setMaxRequestsPerHost(2);
             dispatcher.setMaxRequests(10);
             builder.dispatcher(dispatcher);
@@ -73,17 +70,18 @@ public class GlideUtil {
             interceptor.setLevel(ImageConfiguration.sIS_DEBUG ?
                     HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
             builder.addInterceptor(interceptor);
-            builder.addNetworkInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    Request request = chain.request();
-                    Response response = chain.proceed(request);
-                    return response.newBuilder()
-                            .body(new GlideUtil.ProgressResponseBody(response.body(), imageParam))
-                            .build();
-                }
-            });
+            okHttpClient = builder.build();
         }
+        okHttpClient = okHttpClient.newBuilder().addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request();
+                Response response = chain.proceed(request);
+                return response.newBuilder()
+                        .body(new GlideUtil.ProgressResponseBody(response.body(), imageParam))
+                        .build();
+            }
+        }).build();
         return okHttpClient;
     }
 
@@ -174,36 +172,33 @@ public class GlideUtil {
             if (imageParam.getLoaderListener() != null) {
                 imageParam.getLoaderListener().loader(false);
             }
-            if (imageParam.getImageType() == ImageParam.ImageType.URI ||
-                    imageParam.getImageType() == ImageParam.ImageType.FILE &&
-                            imageParam.getFile() != null) {
-                int width = resource.getWidth();
-                int height = resource.getHeight();
-                FileOutputStream out = null;
-                try {
-                    out = new FileOutputStream(imageParam.getFile());
-                    resource.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                    if (imageParam.getCompressedPercentage() == -1) {
-                        new Compressor(imageParam.getContext())
-                                .compressToFile(imageParam.getFile());
-                    } else {
-                        new Compressor(imageParam.getContext())
-                                .setMaxHeight((int) (height * imageParam.getCompressedPercentage()))
-                                .setMaxWidth((int) (width * imageParam.getCompressedPercentage()))
-                                .compressToFile(imageParam.getFile());
-                    }
+            return false;
+        }
+    }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (out != null) {
-                            out.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+
+    static class GlideFileRequestListener implements RequestListener<File> {
+        private ImageParam imageParam;
+
+        GlideFileRequestListener(ImageParam imageParam) {
+            this.imageParam = imageParam;
+            if (imageParam.getLoaderListener() != null) {
+                imageParam.getLoaderListener().loader(true);
+            }
+        }
+
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
+            if (imageParam.getLoaderListener() != null) {
+                imageParam.getLoaderListener().loader(false);
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
+            if (imageParam.getLoaderListener() != null) {
+                imageParam.getLoaderListener().loader(false);
             }
             return false;
         }

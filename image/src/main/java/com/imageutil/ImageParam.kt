@@ -19,7 +19,7 @@ class ImageParam {
     var progressListener: ProgressListener? = null
     var loaderListener: LoaderListener? = null
     var downloadListener: DownloadListener? = null
-    var url: String? = null
+    var url: String = ""
 
     var imageType = ImageType.URL
 
@@ -38,13 +38,7 @@ class ImageParam {
 
     var scaleType: ImageView.ScaleType? = null
 
-    var config: Bitmap.Config = Bitmap.Config.RGB_565
-
     var transformation: Transformation<Bitmap>? = null
-
-    var file: File? = null
-
-    var compressedPercentage = -1f
 
     enum class ImageType {
         URL,

@@ -15,6 +15,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.signature.ObjectKey;
 import com.imageutil.listener.DownloadListener;
 import com.imageutil.listener.LoaderListener;
 import com.imageutil.listener.ProgressListener;
@@ -26,7 +27,6 @@ import java.io.InputStream;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by clickapps on 19/1/18.
@@ -54,16 +54,6 @@ public class RequestBuilder {
         public GalleryBuilder resize(int height, int width) {
             param.setHeight(height);
             param.setWidth(width);
-            return this;
-        }
-
-        /**
-         * Instead {@link #disableCache()}
-         */
-        @Deprecated
-        @Override
-        public GalleryBuilder cache(boolean isCache) {
-            param.setDisableCache(isCache);
             return this;
         }
 
@@ -108,32 +98,16 @@ public class RequestBuilder {
             return this;
         }
 
-        /**
-         * @param compressedFile
-         * @param compressPercentage (0.1f~1.0f)
-         * @return
-         */
-        public GalleryBuilder compress(@NonNull File compressedFile, float compressPercentage) {
-            param.setFile(compressedFile);
-            param.setCompressedPercentage(compressPercentage);
-            return this;
-        }
-
-        public GalleryBuilder compress(@NonNull File compressedFile) {
-            param.setFile(compressedFile);
-            param.setCompressedPercentage(-1);
-            return this;
-        }
-
         public void build() {
-            if (param.getContext() == null) return;
-//            GlideUtil glideUtil = GlideUtil.get();
-//            OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
-//            OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
-//            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+            if (param.getContext() == null &&
+                    param.getImageView() == null) return;
+            GlideUtil glideUtil = GlideUtil.get();
+            OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
+            OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
+            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
             RequestOptions options = new RequestOptions();
-            RequestManager manager = GlideApp.with(param.getContext());
+            RequestManager manager = Glide.with(param.getContext());
             requestBuilder = manager.asBitmap().load(Uri.parse(param.getUrl()));
             if (param.getLoadingThumbnail() != -1) {
                 options.placeholder(param.getLoadingThumbnail());
@@ -150,7 +124,7 @@ public class RequestBuilder {
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
             }
             if (param.getLatestOnly()) {
-                options.signature(new CacheKey(1, param.getUrl()));
+                options.signature(new ObjectKey(System.currentTimeMillis()));
             }
             if (param.getHeight() > 0 && param.getWidth() > 0) {
                 options.override(param.getWidth(), param.getHeight());
@@ -174,11 +148,12 @@ public class RequestBuilder {
         }
 
         public void build() {
-            if (param.getContext() == null) return;
-//            GlideUtil glideUtil = GlideUtil.get();
-//            OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
-//            OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
-//            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+            if (param.getContext() == null &&
+                    param.getImageView() == null) return;
+            GlideUtil glideUtil = GlideUtil.get();
+            OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
+            OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
+            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
             com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
             RequestOptions options = new RequestOptions();
             RequestManager manager = Glide.with(param.getContext());
@@ -198,7 +173,7 @@ public class RequestBuilder {
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
             }
             if (param.getLatestOnly()) {
-                options.signature(new GlideUrl(param.getUrl()));
+                options.signature(new ObjectKey(System.currentTimeMillis()));
             }
             if (param.getHeight() > 0 && param.getWidth() > 0) {
                 options.override(param.getWidth(), param.getHeight());
@@ -227,71 +202,8 @@ public class RequestBuilder {
         }
 
         public void build() {
-            if (param.getContext() == null) return;
-            GlideUtil glideUtil = GlideUtil.get();
-//            OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
-            GlideUrl glideUrl;
-            if (!param.getHeader().isEmpty()) {
-                glideUrl = new GlideUrl(param.getUrl(), glideUtil.addHeader(param.getHeader()));
-            } else {
-                glideUrl = new GlideUrl(param.getUrl());
-            }
-//            OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
-//            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
-            com.bumptech.glide.RequestBuilder<Bitmap> requestBuilder;
-            RequestOptions options = new RequestOptions();
-            RequestManager manager = GlideApp.with(param.getContext());
-            requestBuilder = manager.asBitmap().load(glideUrl);
-            if (param.getLoadingThumbnail() != -1) {
-                options.placeholder(param.getLoadingThumbnail());
-            } else {
-                options.placeholder(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
-            }
-            if (param.getErrorThumbnail() != -1) {
-                options.error(param.getErrorThumbnail());
-            } else {
-                options.error(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
-            }
-            if (param.getDisableCache()) {
-                options.skipMemoryCache(true);
-                options.diskCacheStrategy(DiskCacheStrategy.NONE);
-            }
-            if (param.getLatestOnly()) {
-                options.signature(new CacheKey(1, param.getUrl()));
-            }
-            if (param.getHeight() > 0 && param.getWidth() > 0) {
-                options.override(param.getWidth(), param.getHeight());
-            }
-            if (param.getTransformation() != null) {
-                options.transform(param.getTransformation());
-            }
-            if (param.getScaleType() != null) {
-                param.getImageView().setScaleType(param.getScaleType());
-            }
-            requestBuilder.apply(options);
-            requestBuilder.listener(new GlideUtil.GlideRequestListener(param));
-            requestBuilder.into(param.getImageView());
-        }
-    }
-
-    public static class DownloadBuilder extends UrlBuilder {
-
-        public DownloadBuilder(ImageParam param) {
-            super(param);
-        }
-
-        public DownloadBuilder downloadListener(@NonNull DownloadListener listener) {
-            param.setDownloadListener(listener);
-            return this;
-        }
-
-        public DownloadBuilder saveTo(@NonNull File file) {
-            param.setFile(file);
-            return this;
-        }
-
-        public void build() {
-            if (param.getContext() == null) return;
+            if (param.getContext() == null &&
+                    param.getImageView() == null) return;
             GlideUtil glideUtil = GlideUtil.get();
             OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
             GlideUrl glideUrl;
@@ -320,36 +232,85 @@ public class RequestBuilder {
                 options.skipMemoryCache(true);
                 options.diskCacheStrategy(DiskCacheStrategy.NONE);
             }
+            if (param.getLatestOnly()) {
+                options.signature(new ObjectKey(System.currentTimeMillis()));
+            }
             if (param.getHeight() > 0 && param.getWidth() > 0) {
                 options.override(param.getWidth(), param.getHeight());
             }
             if (param.getTransformation() != null) {
                 options.transform(param.getTransformation());
             }
+            if (param.getScaleType() != null) {
+                param.getImageView().setScaleType(param.getScaleType());
+            }
             requestBuilder.apply(options);
             requestBuilder.listener(new GlideUtil.GlideRequestListener(param));
-            requestBuilder.into(new SimpleTarget<Bitmap>() {
+            requestBuilder.into(param.getImageView());
+        }
+    }
+
+    public static class DownloadBuilder extends UrlBuilder {
+
+        public DownloadBuilder(ImageParam param) {
+            super(param);
+        }
+
+        public DownloadBuilder downloadListener(@NonNull DownloadListener listener) {
+            param.setDownloadListener(listener);
+            return this;
+        }
+
+        public void build() {
+            if (param.getContext() == null) return;
+            GlideUtil glideUtil = GlideUtil.get();
+            OkHttpClient okHttpClient = glideUtil.getDefaultOkHttpClient(param);
+            GlideUrl glideUrl;
+            if (!param.getHeader().isEmpty()) {
+                glideUrl = new GlideUrl(param.getUrl(), glideUtil.addHeader(param.getHeader()));
+            } else {
+                glideUrl = new GlideUrl(param.getUrl());
+            }
+            OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(okHttpClient);
+            Glide.get(param.getContext()).getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+            com.bumptech.glide.RequestBuilder<File> requestBuilder;
+            RequestOptions options = new RequestOptions();
+            RequestManager manager = Glide.with(param.getContext());
+
+            com.bumptech.glide.RequestBuilder<File> download = manager.downloadOnly();
+
+
+            requestBuilder = manager.downloadOnly().load(glideUrl);
+            if (param.getLoadingThumbnail() != -1) {
+                options.placeholder(param.getLoadingThumbnail());
+            } else {
+                options.placeholder(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
+            }
+            if (param.getErrorThumbnail() != -1) {
+                options.error(param.getErrorThumbnail());
+            } else {
+                options.error(ContextCompat.getDrawable(param.getContext(), android.R.color.holo_red_dark));
+            }
+            if (param.getDisableCache()) {
+                options.skipMemoryCache(true);
+                options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            }
+            if (param.getHeight() > 0 && param.getWidth() > 0) {
+                options.override(param.getWidth(), param.getHeight());
+            }
+            if (param.getLatestOnly()) {
+                options.signature(new ObjectKey(System.currentTimeMillis()));
+            }
+            if (param.getTransformation() != null) {
+                options.transform(param.getTransformation());
+            }
+            requestBuilder.apply(options);
+            requestBuilder.listener(new GlideUtil.GlideFileRequestListener(param));
+            requestBuilder.into(new SimpleTarget<File>() {
                 @Override
-                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                public void onResourceReady(File resource, Transition<? super File> transition) {
                     if (param.getDownloadListener() != null) {
                         param.getDownloadListener().download(resource, param.getTaskId());
-                        if (param.getFile() != null) {
-                            FileOutputStream out = null;
-                            try {
-                                out = new FileOutputStream(param.getFile());
-                                resource.compress(Bitmap.CompressFormat.PNG, 100, out);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            } finally {
-                                try {
-                                    if (out != null) {
-                                        out.close();
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
                     }
                 }
             });

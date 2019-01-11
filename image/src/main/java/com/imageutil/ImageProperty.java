@@ -17,9 +17,6 @@ public interface ImageProperty<T> {
 
     T resize(int height, int width);
 
-    @Deprecated
-    T cache(boolean isCache);
-
     T disableCache();
 
     T forceLatestDownload();

@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.util.ArrayMap;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -44,81 +46,71 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView6;
     @BindView(R.id.imageView7)
     ImageView imageView7;
-    private final String url = "http://res.cloudinary.com/clickapps/image/upload/v1504245457/test/1024x1024-Wallpapers-010.jpg";
-//    private final String url = "";
-
+    //    private final String url = "http://res.cloudinary.com/clickapps/image/upload/v1504245457/test/1024x1024-Wallpapers-010.jpg";
+    private final String url = "https://res.cloudinary.com/clickapp/image/upload/v1547194652/Test/1.png";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Pair<View, String> pair = Pair.create(v, v.getTransitionName());
-                ActivityOptionsCompat option = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, pair);
-                startActivity(new Intent(MainActivity.this, SecondActivity.class), option.toBundle());
-            }
-        });
+        // ImageUtil.get().clearCache(this);
         new ImageConfiguration.Builder()
                 .isDebug(true)
                 .config();
 
-        File file = new File(Environment.getExternalStorageDirectory(), "temp2.jpg");
-        ImageUtil.with(this)
-                .download(url)
-                .saveTo(file)
-                .downloadListener(new DownloadListener() {
-                    @Override
-                    public void download(Bitmap bitmap, int taskId) {
-                        Log.i(getLocalClassName(), "bitmap = " + bitmap);
-                        Log.i(getLocalClassName(), "taskId = " + taskId);
-                        imageView.setImageBitmap(bitmap);
-                    }
-                })
-                .tasKId(1)
-                .progressListener(new ProgressListener() {
-                    @Override
-                    public void update(long bytesRead, long contentLength, int progress) {
-                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
-                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
-                    }
-                })
-                .loaderListener(new LoaderListener() {
-                    @Override
-                    public void loader(boolean isLoader) {
-                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
-                    }
-                }).build();
-        file = new File(Environment.getExternalStorageDirectory(), "temp.jpg");
-        ImageUtil.with(this)
-                .file(file, imageView1)
-                .tasKId(2)
-//                .forceLatestDownload()
-                .progressListener(new ProgressListener() {
-                    @Override
-                    public void update(long bytesRead, long contentLength, int progress) {
-                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
-                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
-                    }
-                })
-                .loaderListener(new LoaderListener() {
-                    @Override
-                    public void loader(boolean isLoader) {
-                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
-                    }
-                })
-                .scaleType(ImageView.ScaleType.FIT_CENTER)
-                .build();
+//        File file = new File(Environment.getExternalStorageDirectory(), "temp2.jpg");
+//        ImageUtil.with(this)
+//                .download(url)
+//                .saveTo(file)
+//                .downloadListener(new DownloadListener() {
+//                    @Override
+//                    public void download(Bitmap bitmap, int taskId) {
+//                        Log.i(getLocalClassName(), "bitmap = " + bitmap);
+//                        Log.i(getLocalClassName(), "taskId = " + taskId);
+//                        imageView.setImageBitmap(bitmap);
+//                    }
+//                })
+//                .tasKId(1)
+//                .progressListener(new ProgressListener() {
+//                    @Override
+//                    public void update(long bytesRead, long contentLength, int progress) {
+//                        Log.i(getLocalClassName(), "imageView progress = " + progress);
+//                    }
+//                })
+//                .loaderListener(new LoaderListener() {
+//                    @Override
+//                    public void loader(boolean isLoader) {
+//                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
+//                    }
+//                }).build();
+//        file = new File(Environment.getExternalStorageDirectory(), "temp.jpg");
+//        ImageUtil.with(this)
+//                .file(file, imageView1)
+//                .tasKId(2)
+////                .forceLatestDownload()
+//                .progressListener(new ProgressListener() {
+//                    @Override
+//                    public void update(long bytesRead, long contentLength, int progress) {
+//                        Log.i(getLocalClassName(), "imageView1 progress = " + progress);
+//                    }
+//                })
+//                .loaderListener(new LoaderListener() {
+//                    @Override
+//                    public void loader(boolean isLoader) {
+//                        Log.i(getLocalClassName(), "isLoader = " + isLoader);
+//                    }
+//                })
+//                .scaleType(ImageView.ScaleType.FIT_CENTER)
+//                .build();
 
         ImageUtil.with(this)
                 .url(url, imageView2)
+                .forceLatestDownload()
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {
-                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
-                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                        Log.i(getLocalClassName(), "imageView2 progress = " + progress);
                     }
                 })
                 .loaderListener(new LoaderListener() {
@@ -135,8 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {
-                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
-                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                        Log.i(getLocalClassName(), "imageView3 progress = " + progress);
                     }
                 })
                 .loaderListener(new LoaderListener() {
@@ -153,8 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {
-                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
-                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                        Log.i(getLocalClassName(), "imageView4 progress = " + progress);
                     }
                 })
                 .loaderListener(new LoaderListener() {
@@ -171,8 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {
-                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
-                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                        Log.i(getLocalClassName(), "imageView5 progress = " + progress);
                     }
                 })
                 .loaderListener(new LoaderListener() {
@@ -189,8 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {
-                        Log.i(getLocalClassName(), "Byte = " + bytesRead);
-                        Log.i(getLocalClassName(), "contentLength = " + contentLength);
+                        Log.i(getLocalClassName(), "imageView6 progress = " + progress);
                     }
                 })
                 .loaderListener(new LoaderListener() {
@@ -208,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 .progressListener(new ProgressListener() {
                     @Override
                     public void update(long bytesRead, long contentLength, int progress) {
-                        Log.i(getLocalClassName(), "progress = " + progress);
+                        Log.i(getLocalClassName(), "imageView7 progress = " + progress);
                     }
                 })
                 .loaderListener(new LoaderListener() {
@@ -219,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .scaleType(ImageView.ScaleType.FIT_START)
                 .build();
+
     }
 
 }
